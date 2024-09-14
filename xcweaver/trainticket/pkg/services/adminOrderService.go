@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 // ! TODO

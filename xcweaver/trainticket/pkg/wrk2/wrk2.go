@@ -9,7 +9,7 @@ import (
 	tt_metrics "trainticket/pkg/metrics"
 	"trainticket/pkg/services"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 type server struct {

@@ -6,7 +6,7 @@ import (
 
 	"trainticket/pkg/model"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 type OrderService interface {

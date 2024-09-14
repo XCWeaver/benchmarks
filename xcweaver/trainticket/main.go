@@ -8,7 +8,7 @@ import (
 
 	"trainticket/pkg/wrk2"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 // this is an entry file for socialnetwork application

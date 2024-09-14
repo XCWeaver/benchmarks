@@ -13,7 +13,7 @@ import (
 	"trainticket/pkg/model"
 	"trainticket/pkg/util"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 type ContactService interface {

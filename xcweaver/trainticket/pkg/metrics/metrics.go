@@ -1,12 +1,12 @@
 package metrics
 
-import "github.com/TiagoMalhadas/xcweaver/metrics"
+import "github.com/XCWeaver/xcweaver/metrics"
 
 var (
 	OrderTicketDuration = metrics.NewHistogram(
 		"tt_order_ticket_duration_ms",
 		"Duration of order endpoint in milliseconds",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	Orders = metrics.NewCounter(
 		"sn_orders",
@@ -23,6 +23,6 @@ var (
 	ConsistencyWindow = metrics.NewHistogram(
 		"sn_consistency_window_ms",
 		"Time taken between the post write on master and the post read on the replica",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 )

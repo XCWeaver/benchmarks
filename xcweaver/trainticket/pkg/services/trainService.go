@@ -8,7 +8,7 @@ import (
 	"trainticket/pkg/model"
 	"trainticket/pkg/util"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

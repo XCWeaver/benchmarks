@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 	"github.com/dgrijalva/jwt-go"
 )
 
