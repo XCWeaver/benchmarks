@@ -5,7 +5,7 @@
   any_errors_fatal: true
   tasks:
     - name: Running wrk2 in remote machines
-      shell: /usr/bin/python3 manager.py wrk2-vm --kube -t {{threads}} -d {{duration}} -r {{rate}} -h {{host}} -ts {{workload_timestamp}}
+      shell: /usr/bin/python3 manager.py wrk2-vm-kube --kube -t {{threads}} -d {{duration}} -r {{rate}} -h {{host}} -ts {{workload_timestamp}}
       args:
         chdir: "{{ app_folder_name }}"
       environment: 

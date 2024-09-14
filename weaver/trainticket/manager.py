@@ -249,7 +249,6 @@ def run_test(duration, address, rate, throughputs, latencies_results, index):
           return
         latencies.append(int(time.time() * 1000) - request_time_ms)
         requests_counter[0] += 1
-        print("request")
     except requests.RequestException as e:
       print(f"Request failed: {e}")
     except json.JSONDecodeError as e:
@@ -473,28 +472,34 @@ def gcp_wrk2(duration, threads, rate):
 
 
 def kube_consistency_window(host):
-  url = f'http://{host}/wrk2/wrk2-api/user/consistencyWindow'
+  url = f'http://{host}/wrk2-api/user/consistencyWindow'
   response = requests.get(url)
 
   if response.status_code == 200:
       data = json.loads(response.text)
-      response = requests.get(url)
       
       if data == None:
         return None
-      print(data)
-      print(len(data))
-      average = statistics.mean(data)
-      print(f"Average: {average}")
 
       # Calculate the median
       median = statistics.median(data)
       print(f"Median: {median}")
       return median
   else:
-      print(f"Failed to get data: {response.status_code}")
+      print(f"Failed to get consistency window: {response.status_code}")
 
-def kube_deploy():
+def kube_inconsistencies(host):
+  url = f'http://{host}/wrk2-api/user/inconsistencies'
+  response = requests.get(url)
+
+  if response.status_code == 200:
+      inconsistencies = int(response.text)
+
+      return inconsistencies
+  else:
+      print(f"Failed to get inconsistencies: {response.status_code}")
+
+def gcp_deploy_kube():
   from plumbum.cmd import terraform, ansible_playbook
 
   terraform['-chdir=./deploy/terraform', 'init'] & FG
@@ -517,13 +522,13 @@ def kube_deploy():
   
   ansible_playbook["deploy/ansible/playbooks/install-machines.yml", "-i", "deploy/tmp/ansible-inventory-gcp.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
 
-def kube_cluster():
+def gcp_cluster_kube():
   from plumbum.cmd import gcloud
   gcloud["beta", "container", "--project", GCP_PROJECT_ID, "clusters", "create-auto", "cluster-trainticket", "--region", "us-central1", "--release-channel", "regular", "--network", f"projects/{GCP_PROJECT_ID}/global/networks/default", "--subnetwork", f"projects/{GCP_PROJECT_ID}/regions/us-central1/subnetworks/default", "--cluster-ipv4-cidr", "/17", "--binauthz-evaluation-mode=DISABLED"] & FG
   gcloud["container", "clusters", "get-credentials", "cluster-trainticket", "--region", "us-central1", "--project", GCP_PROJECT_ID] & FG
 
 
-def kube_wrk2_vm(duration, threads, rate, timestamp, host):
+def gcp_wrk2_vm_kube(duration, threads, rate, timestamp, host):
   import threading
   threads_list = []
   individual_rate = int(int(rate) / int(threads))
@@ -558,15 +563,16 @@ def kube_wrk2_vm(duration, threads, rate, timestamp, host):
   histogram.dump(histoblob, output)
   median = histogram.get_value_at_percentile(50.0)
   consistency_window = kube_consistency_window(host)
+  inconsistencies = kube_inconsistencies(host)
   filepath = f"evaluation/gcp/{timestamp}/workload.out"
   os.makedirs(os.path.dirname(filepath), exist_ok=True)
   with open(filepath, "w") as f:
-    f.write(output.getvalue().decode() + throughput_str +  f" Latency Median:     {median}\n Consistency Window Median:     {consistency_window}\n")
+    f.write(output.getvalue().decode() + throughput_str +  f" Latency Median:     {median}\n Consistency Window Median:     {consistency_window}\n  Inconsistencies:     {inconsistencies}\n")
 
-  print(output.getvalue().decode() + throughput_str + f" Latency Median:     {median}\n  Consistency Window Median:     {consistency_window}\n")
+  print(output.getvalue().decode() + throughput_str + f" Latency Median:     {median}\n  Consistency Window Median:     {consistency_window}\n  Inconsistencies:     {inconsistencies}\n")
   print(f"[INFO] workload results saved at {filepath}")
 
-def kube_wrk2(duration, threads, rate, host):
+def gcp_wrk2_kube(duration, threads, rate, host):
   from plumbum.cmd import ansible_playbook
   timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
   metrics_path = f"{BASE_DIR}/evaluation/gcp/{timestamp}"
@@ -620,13 +626,15 @@ def local_wrk2_kube(duration, threads, rate, host):
   output = io.BytesIO()
   histogram.dump(histoblob, output)
   median = histogram.get_value_at_percentile(50.0)
+  consistency_window = kube_consistency_window(host)
+  inconsistencies = kube_inconsistencies(host)
   timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
   filepath = f"evaluation/local/{timestamp}/workload.out"
   os.makedirs(os.path.dirname(filepath), exist_ok=True)
   with open(filepath, "w") as f:
-    f.write(output.getvalue().decode() + throughput_str + f"Latency Median:     {median}\n")
+    f.write(output.getvalue().decode() + throughput_str + f"Latency Median:     {median}\n  Consistency Window Median:     {consistency_window}\n  Inconsistencies:     {inconsistencies}\n")
 
-  print(output.getvalue().decode() + throughput_str + f"Latency Median:     {median}\n")
+  print(output.getvalue().decode() + throughput_str + f"Latency Median:     {median}\n  Consistency Window Median:     {consistency_window}\n  Inconsistencies:     {inconsistencies}\n")
   print(f"[INFO] workload results saved at {filepath}")
 
 
@@ -770,14 +778,14 @@ if __name__ == "__main__":
     parser = command_parser.add_parser(cmd)
     parser.add_argument('--local', action='store_true', help="Running in localhost")
     parser.add_argument('--gcp', action='store_true',   help="Running in gcp")
-    parser.add_argument('--kube', action='store_true',   help="Running in kubernetes")
-    if cmd == 'wrk2' or cmd =='wrk2-vm' or cmd =='wrk2-kube':
+    if cmd == 'wrk2' or cmd =='wrk2-vm' or cmd =='wrk2-kube' or cmd =='wrk2-vm-kube':
       parser.add_argument('-d', '--duration', default=30, help="Duration")
       parser.add_argument('-t', '--threads', default=2, help="Number of threads")
       parser.add_argument('-r', '--rate', default=50, help="Number of requests per second")
-      parser.add_argument('-ht', '--host', default="localhost", help="Number of requests per second")
-    if cmd == 'wrk2-vm':
+    if cmd == 'wrk2-vm' or cmd =='wrk2-vm-kube':
       parser.add_argument('-ts', '--timestamp', help="Timestamp of workload")
+    if cmd == 'wrk2-kube' or cmd =='wrk2-vm-kube':
+      parser.add_argument('-ht', '--host', default="localhost", help="Number of requests per second")
     if cmd == 'metrics':
       parser.add_argument('-t', '--timestamp', help="Timestamp of workload")
 
@@ -786,9 +794,8 @@ if __name__ == "__main__":
 
   local = args.pop('local')
   gcp = args.pop('gcp')
-  kube = args.pop('kube')
 
-  if (local and gcp) or (not local and not gcp and not kube) or (local and kube) or (gcp and kube):
+  if local and gcp or not local:
     print("[ERROR] one of --local or --gcp flgs needs to be provided")
     exit(-1)
 
@@ -797,9 +804,6 @@ if __name__ == "__main__":
   elif gcp:
     load_gcp_profile()
     command = 'gcp_' + command
-  elif kube:
-    load_gcp_profile()
-    command = 'kube_' + command
 
   print(f"[INFO] ----- {command.upper().replace('_', ' ')} -----\n")
   getattr(sys.modules[__name__], command)(**args)

@@ -19,6 +19,7 @@ type CancelService interface {
 	Calculate(ctx context.Context, orderId, token string) (string, error)
 	CancelTicket(ctx context.Context, orderId, loginId, token string) (string, error)
 	GetConsistencyWindowValues(ctx context.Context) ([]float64, error)
+	GetInconsistencies(ctx context.Context) (int, error)
 }
 
 type cancelService struct {
@@ -27,10 +28,12 @@ type cancelService struct {
 	orderOtherService weaver.Ref[OrderOtherService]
 	//userService       weaver.Ref[UserService]
 	//notificationService     weaver.Ref[NotificationService]
-	insidePaymentService    weaver.Ref[InsidePaymentService]
-	roles                   []string
-	mu                      sync.Mutex
+	insidePaymentService weaver.Ref[InsidePaymentService]
+	roles                []string
+	//mu                      sync.Mutex
 	consistencyWindowValues []float64
+	//muInc                   sync.Mutex
+	inconsistencies int
 }
 
 func (csi *cancelService) Init(ctx context.Context) error {
@@ -39,6 +42,8 @@ func (csi *cancelService) Init(ctx context.Context) error {
 	csi.roles = append(csi.roles, "role1")
 	csi.roles = append(csi.roles, "role2")
 	csi.roles = append(csi.roles, "role3")
+
+	csi.inconsistencies = 0
 
 	logger.Info("cancel service running!")
 	return nil
@@ -126,14 +131,17 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 
 			consistencyWindowMs := float64(time.Now().UnixMilli() - startTimeMs)
 			tt_metrics.ConsistencyWindow.Put(consistencyWindowMs)
-			csi.mu.Lock()
+			//csi.mu.Lock()
 			csi.consistencyWindowValues = append(csi.consistencyWindowValues, consistencyWindowMs)
-			csi.mu.Unlock()
+			//csi.mu.Unlock()
 
 			// 3. get results
 			if alive[0] == 1 {
 				logger.Error("Assynchronous call not yet finished!")
 				tt_metrics.Inconsistencies.Inc()
+				//csi.muInc.Lock()
+				csi.inconsistencies += 1
+				//csi.muInc.Unlock()
 				return "Cancelation failed", nil
 			}
 			if err1 != nil {
@@ -172,13 +180,16 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 
 		consistencyWindowMs := float64(time.Now().UnixMilli() - startTimeMs)
 		tt_metrics.ConsistencyWindow.Put(consistencyWindowMs)
-		csi.mu.Lock()
+		//csi.mu.Lock()
 		csi.consistencyWindowValues = append(csi.consistencyWindowValues, consistencyWindowMs)
-		csi.mu.Unlock()
+		//csi.mu.Unlock()
 		// 3. get results
 		if alive[0] == 1 {
 			logger.Error("Assynchronous call not yet finished!")
 			tt_metrics.Inconsistencies.Inc()
+			//csi.muInc.Lock()
+			csi.inconsistencies += 1
+			//csi.muInc.Unlock()
 			return "Cancelation failed", nil
 		}
 		if err1 != nil {
@@ -190,10 +201,17 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 }
 
 func (csi *cancelService) GetConsistencyWindowValues(ctx context.Context) ([]float64, error) {
-	csi.mu.Lock()
+	//csi.mu.Lock()
 	values := csi.consistencyWindowValues
-	csi.mu.Unlock()
+	//csi.mu.Unlock()
 	return values, nil
+}
+
+func (csi *cancelService) GetInconsistencies(ctx context.Context) (int, error) {
+	//csi.muInc.Lock()
+	inconsistencies := csi.inconsistencies
+	//csi.muInc.Unlock()
+	return inconsistencies, nil
 }
 
 func calculateRefund(order model.Order) string {

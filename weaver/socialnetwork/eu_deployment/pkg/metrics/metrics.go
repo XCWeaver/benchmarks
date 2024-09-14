@@ -11,7 +11,7 @@ var (
 	UpdatePostDuration = metrics.NewHistogramMap[RegionLabel](
 		"sn_update_post_duration_ms",
 		"Duration of compose post endpoint in milliseconds in the current region",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	// composed post service
 	ComposedPosts = metrics.NewCounterMap[RegionLabel](
@@ -30,23 +30,23 @@ var (
 	WritePostDurationMs = metrics.NewHistogramMap[RegionLabel](
 		"sn_write_post_duration_ms",
 		"Duration of a write operation in milliseconds in the current region",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	ReadPostDurationMs = metrics.NewHistogramMap[RegionLabel](
 		"sn_read_post_duration_ms",
 		"Duration of a read operation in milliseconds in the current region",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	UpdatePostDurationMs = metrics.NewHistogramMap[RegionLabel](
 		"sn_update_post_operation_duration_ms",
 		"Duration of a update operation in milliseconds in the current region",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	// write home timeline service
 	QueueDurationMs = metrics.NewHistogramMap[RegionLabel](
 		"sn_queue_duration_ms",
 		"Duration of queue in milliseconds in the current region",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	ReceivedNotifications = metrics.NewCounterMap[RegionLabel](
 		"sn_received_notifications",

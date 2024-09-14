@@ -37,10 +37,10 @@ func init() {
 		Iface: reflect.TypeOf((*Notifier)(nil)).Elem(),
 		Impl:  reflect.TypeOf(notifier{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Notifier", Method: "Notify", Remote: false})}
+			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Notifier", Method: "Notify", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return notifier_client_stub{stub: stub, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Notifier", Method: "Notify", Remote: true})}
+			return notifier_client_stub{stub: stub, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Notifier", Method: "Notify", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return notifier_server_stub{impl: impl.(Notifier), addLoad: addLoad}
@@ -55,10 +55,10 @@ func init() {
 		Iface: reflect.TypeOf((*Post_storage_europe)(nil)).Elem(),
 		Impl:  reflect.TypeOf(post_storage_europe{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return post_storage_europe_local_stub{impl: impl.(Post_storage_europe), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_storage_europe", Method: "Post", Remote: false})}
+			return post_storage_europe_local_stub{impl: impl.(Post_storage_europe), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_storage_europe", Method: "Post", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return post_storage_europe_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_storage_europe", Method: "Post", Remote: true})}
+			return post_storage_europe_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_storage_europe", Method: "Post", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return post_storage_europe_server_stub{impl: impl.(Post_storage_europe), addLoad: addLoad}
@@ -73,10 +73,10 @@ func init() {
 		Iface: reflect.TypeOf((*Post_upload)(nil)).Elem(),
 		Impl:  reflect.TypeOf(post_upload{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return post_upload_local_stub{impl: impl.(Post_upload), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_upload", Method: "Post", Remote: false})}
+			return post_upload_local_stub{impl: impl.(Post_upload), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_upload", Method: "Post", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return post_upload_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_upload", Method: "Post", Remote: true})}
+			return post_upload_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_upload", Method: "Post", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return post_upload_server_stub{impl: impl.(Post_upload), addLoad: addLoad}
@@ -403,10 +403,10 @@ func (s post_upload_client_stub) Post(ctx context.Context, a0 string, a1 int) (e
 // Note that "weaver generate" will always generate the error message below.
 // Everything is okay. The error message is only relevant if you see it when
 // you run "go build" or "go run".
-var _ codegen.LatestVersion = codegen.Version[[0][20]struct{}](`
+var _ codegen.LatestVersion = codegen.Version[[0][24]struct{}](`
 
-ERROR: You generated this file with 'weaver generate' v0.22.1-0.20231019162801-c2294d1ae0e8 (codegen
-version v0.20.0). The generated code is incompatible with the version of the
+ERROR: You generated this file with 'weaver generate' v0.24.3 (codegen
+version v0.24.0). The generated code is incompatible with the version of the
 github.com/ServiceWeaver/weaver module that you're using. The weaver module
 version can be found in your go.mod file or by running the following command.
 

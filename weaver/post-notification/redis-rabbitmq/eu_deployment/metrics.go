@@ -14,6 +14,6 @@ var (
 	writePostDurationMs = metrics.NewHistogram(
 		"sn_write_post_duration_ms",
 		"Duration of write operation in milliseconds in the eu region",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 )

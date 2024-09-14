@@ -14,16 +14,16 @@ var (
 	readPostDurationMs = metrics.NewHistogram(
 		"sn_read_post_duration_ms",
 		"Duration of read operation in milliseconds in the us region",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	queueDurationMs = metrics.NewHistogram(
 		"sn_queue_duration_ms",
 		"Duration of queue in milliseconds",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 	consistencyWindow = metrics.NewHistogram(
 		"sn_consistency_window_ms",
 		"Time taken between the post write on master and the post read on the replica",
-		metrics.NonNegativeBuckets,
+		[]float64{},
 	)
 )

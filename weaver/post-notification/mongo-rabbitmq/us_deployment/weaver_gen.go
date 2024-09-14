@@ -20,10 +20,10 @@ func init() {
 		Iface: reflect.TypeOf((*Follower_Notify)(nil)).Elem(),
 		Impl:  reflect.TypeOf(follower_Notify{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return follower_Notify_local_stub{impl: impl.(Follower_Notify), tracer: tracer, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Follower_Notify", Method: "Follower_Notify", Remote: false})}
+			return follower_Notify_local_stub{impl: impl.(Follower_Notify), tracer: tracer, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Follower_Notify", Method: "Follower_Notify", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return follower_Notify_client_stub{stub: stub, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Follower_Notify", Method: "Follower_Notify", Remote: true})}
+			return follower_Notify_client_stub{stub: stub, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Follower_Notify", Method: "Follower_Notify", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return follower_Notify_server_stub{impl: impl.(Follower_Notify), addLoad: addLoad}
@@ -71,10 +71,10 @@ func init() {
 		Iface: reflect.TypeOf((*Post_storage_america)(nil)).Elem(),
 		Impl:  reflect.TypeOf(post_storage_america{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return post_storage_america_local_stub{impl: impl.(Post_storage_america), tracer: tracer, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetConsistencyWindowValues", Remote: false}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetPost", Remote: false})}
+			return post_storage_america_local_stub{impl: impl.(Post_storage_america), tracer: tracer, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetConsistencyWindowValues", Remote: false, Generated: true}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetPost", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return post_storage_america_client_stub{stub: stub, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetConsistencyWindowValues", Remote: true}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetPost", Remote: true})}
+			return post_storage_america_client_stub{stub: stub, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetConsistencyWindowValues", Remote: true, Generated: true}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetPost", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return post_storage_america_server_stub{impl: impl.(Post_storage_america), addLoad: addLoad}
@@ -391,10 +391,10 @@ func (s post_storage_america_client_stub) GetPost(ctx context.Context, a0 Post_i
 // Note that "weaver generate" will always generate the error message below.
 // Everything is okay. The error message is only relevant if you see it when
 // you run "go build" or "go run".
-var _ codegen.LatestVersion = codegen.Version[[0][20]struct{}](`
+var _ codegen.LatestVersion = codegen.Version[[0][24]struct{}](`
 
-ERROR: You generated this file with 'weaver generate' v0.22.1-0.20231019162801-c2294d1ae0e8 (codegen
-version v0.20.0). The generated code is incompatible with the version of the
+ERROR: You generated this file with 'weaver generate' v0.24.3 (codegen
+version v0.24.0). The generated code is incompatible with the version of the
 github.com/ServiceWeaver/weaver module that you're using. The weaver module
 version can be found in your go.mod file or by running the following command.
 
