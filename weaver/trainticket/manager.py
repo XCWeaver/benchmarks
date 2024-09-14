@@ -598,7 +598,7 @@ def local_wrk2_kube(duration, threads, rate, host):
     latencies.append([])
   print(f"[INFO] Running {rate} requests/second for {duration} seconds with {threads} clients!")
   for i in range(int(threads)):
-    thread = threading.Thread(target=run_test, args=(duration, f"http://localhost", individual_rate, throughputs, latencies, i))
+    thread = threading.Thread(target=run_test, args=(duration, f"http://{host}", individual_rate, throughputs, latencies, i))
     thread.start()
     threads_list.append(thread)
 
@@ -767,7 +767,7 @@ if __name__ == "__main__":
 
   commands = [
     #gcp
-     'configure', 'deploy', 'start', 'stop', 'info', 'restart', 'clean', 'consistency-window', 'tests', 'cluster',
+     'configure', 'deploy', 'start', 'stop', 'info', 'restart', 'clean', 'consistency-window', 'tests', 'cluster-kube',
     # datastores
     'storage-run', 'storage-info', 'storage-clean',
     # eval
@@ -795,7 +795,7 @@ if __name__ == "__main__":
   local = args.pop('local')
   gcp = args.pop('gcp')
 
-  if local and gcp or not local:
+  if local and gcp or not local and not gcp:
     print("[ERROR] one of --local or --gcp flgs needs to be provided")
     exit(-1)
 

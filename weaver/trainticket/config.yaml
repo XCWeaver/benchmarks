@@ -9,3 +9,11 @@ listeners:
   - name: wrk2
     public: true
     port: 12345
+
+resourceSpec:
+  requests:
+    memory: "10Gi"
+    cpu: "2"  
+  limits:
+    memory: "32Gi"
+    cpu: "8"  
