@@ -28,6 +28,8 @@ func serve(ctx context.Context, app *app) error {
 	logger := app.Logger(ctx)
 	logger.Info("post-notification listener available", "address", app.post_notification)
 
+	go app.notifier.Get().ReadNotification(ctx)
+
 	post_storage := app.post_storage.Get()
 
 	// Serve the /post_notification endpoint.

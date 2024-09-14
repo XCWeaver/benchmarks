@@ -55,9 +55,11 @@ func init() {
 		Iface: reflect.TypeOf((*Notifier)(nil)).Elem(),
 		Impl:  reflect.TypeOf(notifier{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer}
+			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer, readNotificationMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Notifier", Method: "ReadNotification", Remote: false, Generated: true})}
 		},
-		ClientStubFn: func(stub codegen.Stub, caller string) any { return notifier_client_stub{stub: stub} },
+		ClientStubFn: func(stub codegen.Stub, caller string) any {
+			return notifier_client_stub{stub: stub, readNotificationMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Notifier", Method: "ReadNotification", Remote: true, Generated: true})}
+		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return notifier_server_stub{impl: impl.(Notifier), addLoad: addLoad}
 		},
@@ -138,12 +140,33 @@ type main_local_stub struct {
 var _ weaver.Main = (*main_local_stub)(nil)
 
 type notifier_local_stub struct {
-	impl   Notifier
-	tracer trace.Tracer
+	impl                    Notifier
+	tracer                  trace.Tracer
+	readNotificationMetrics *codegen.MethodMetrics
 }
 
 // Check that notifier_local_stub implements the Notifier interface.
 var _ Notifier = (*notifier_local_stub)(nil)
+
+func (s notifier_local_stub) ReadNotification(ctx context.Context) (err error) {
+	// Update metrics.
+	begin := s.readNotificationMetrics.Begin()
+	defer func() { s.readNotificationMetrics.End(begin, err != nil, 0, 0) }()
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "main.Notifier.ReadNotification", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.ReadNotification(ctx)
+}
 
 type post_storage_america_local_stub struct {
 	impl                              Post_storage_america
@@ -270,11 +293,58 @@ type main_client_stub struct {
 var _ weaver.Main = (*main_client_stub)(nil)
 
 type notifier_client_stub struct {
-	stub codegen.Stub
+	stub                    codegen.Stub
+	readNotificationMetrics *codegen.MethodMetrics
 }
 
 // Check that notifier_client_stub implements the Notifier interface.
 var _ Notifier = (*notifier_client_stub)(nil)
+
+func (s notifier_client_stub) ReadNotification(ctx context.Context) (err error) {
+	// Update metrics.
+	var requestBytes, replyBytes int
+	begin := s.readNotificationMetrics.Begin()
+	defer func() { s.readNotificationMetrics.End(begin, err != nil, requestBytes, replyBytes) }()
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "main.Notifier.ReadNotification", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+			if err != nil {
+				err = errors.Join(weaver.RemoteCallError, err)
+			}
+		}
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+
+	}()
+
+	var shardKey uint64
+
+	// Call the remote method.
+	var results []byte
+	results, err = s.stub.Run(ctx, 0, nil, shardKey)
+	replyBytes = len(results)
+	if err != nil {
+		err = errors.Join(weaver.RemoteCallError, err)
+		return
+	}
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	err = dec.Error()
+	return
+}
 
 type post_storage_america_client_stub struct {
 	stub                              codegen.Stub
@@ -484,9 +554,30 @@ var _ codegen.Server = (*notifier_server_stub)(nil)
 // GetStubFn implements the codegen.Server interface.
 func (s notifier_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
 	switch method {
+	case "ReadNotification":
+		return s.readNotification
 	default:
 		return nil
 	}
+}
+
+func (s notifier_server_stub) readNotification(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	appErr := s.impl.ReadNotification(ctx)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	enc.Error(appErr)
+	return enc.Data(), nil
 }
 
 type post_storage_america_server_stub struct {
@@ -581,6 +672,11 @@ type notifier_reflect_stub struct {
 
 // Check that notifier_reflect_stub implements the Notifier interface.
 var _ Notifier = (*notifier_reflect_stub)(nil)
+
+func (s notifier_reflect_stub) ReadNotification(ctx context.Context) (err error) {
+	err = s.caller("ReadNotification", ctx, []any{}, []any{})
+	return
+}
 
 type post_storage_america_reflect_stub struct {
 	caller func(string, context.Context, []any, []any) error
