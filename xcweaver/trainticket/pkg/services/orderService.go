@@ -55,11 +55,7 @@ func (osi *orderService) Init(ctx context.Context) error {
 	osi.roles = append(osi.roles, "role2")
 	osi.roles = append(osi.roles, "role3")
 
-	orders, err := readOrders("pkg/datasets/orders.json")
-	if err != nil {
-		return err
-	}
-	osi.orders = orders
+	osi.orders = initOrders()
 
 	logger.Info("order service running!", "firstOrder", osi.orders[0])
 

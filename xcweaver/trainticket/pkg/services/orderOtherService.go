@@ -2,9 +2,8 @@ package services
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"os"
+	"strconv"
 
 	"trainticket/pkg/model"
 
@@ -35,21 +34,31 @@ type OrderOtherService interface {
 	MongoPort string `toml:"mongodb_port"`
 }*/
 
-func readOrders(filename string) ([]model.Order, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
+func initOrders() []model.Order {
 	var orders []model.Order
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&orders)
-	if err != nil {
-		return nil, err
+	for i := 0; i < 60000; i++ {
+
+		orders = append(orders, model.Order{
+			Id:                     strconv.FormatInt(int64(i), 10),
+			BoughtDate:             "17/05/2024",
+			TravelDate:             "17/08/2024",
+			AccountId:              "account1234",
+			ContactsName:           "john",
+			DocumentType:           1,
+			ContactsDocumentNumber: "1234567",
+			TrainNumber:            "12345",
+			CoachNumber:            "2",
+			SeatClass:              1,
+			SeatNumber:             strconv.FormatInt(int64(i), 10),
+			From:                   "Lisboa",
+			To:                     "Guarda",
+			Status:                 0,
+			Price:                  10.20,
+		})
+
 	}
 
-	return orders, nil
+	return orders
 }
 
 type orderOtherService struct {
@@ -75,11 +84,7 @@ func (osi *orderOtherService) Init(ctx context.Context) error {
 	osi.roles = append(osi.roles, "role2")
 	osi.roles = append(osi.roles, "role3")
 
-	orders, err := readOrders("pkg/datasets/orders.json")
-	if err != nil {
-		return err
-	}
-	osi.orders = orders
+	osi.orders = initOrders()
 
 	logger.Info("order other service running!", "firstOrder", osi.orders[0])
 

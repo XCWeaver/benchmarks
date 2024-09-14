@@ -10,7 +10,6 @@ import (
 
 	tt_metrics "trainticket/pkg/metrics"
 	"trainticket/pkg/model"
-	"trainticket/pkg/util"
 
 	"github.com/XCWeaver/xcweaver"
 )
@@ -49,13 +48,13 @@ func (csi *cancelService) Calculate(ctx context.Context, orderId, token string) 
 	logger := csi.Logger(ctx)
 	logger.Info("entering Calculate", "orderId", orderId)
 
-	err := util.Authenticate(token, csi.roles...)
+	/*err := util.Authenticate(token, csi.roles...)
 	if err != nil {
 		return "", err
-	}
+	}*/
 
 	var order model.Order
-	order, err = csi.orderService.Get().GetOrderById(ctx, orderId, token)
+	order, err := csi.orderService.Get().GetOrderById(ctx, orderId, token)
 	if err == nil {
 		if model.OrderStatus(order.Status) == model.NotPaid || model.OrderStatus(order.Status) == model.Paid {
 			if model.OrderStatus(order.Status) == model.NotPaid {

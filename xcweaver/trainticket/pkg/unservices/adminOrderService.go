@@ -14,9 +14,9 @@ type AdminOrderService interface {
 
 type adminOrderService struct {
 	xcweaver.Implements[AdminOrderService]
-	orderService      xcweaver.Ref[OrderService]
-	orderOtherService xcweaver.Ref[OrderOtherService]
-	roles             []string
+	//orderService      xcweaver.Ref[OrderService]
+	//orderOtherService xcweaver.Ref[OrderOtherService]
+	roles []string
 }
 
 /*func (aosi *adminOrderService) GetAllOrders(ctx context.Context, token string) ([]model.Order, error) {
