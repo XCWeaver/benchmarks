@@ -14,7 +14,7 @@ echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
 source ~/.bashrc
 
 # install Weaver 0.22.0
-go install github.com/ServiceWeaver/weaver/cmd/weaver@v0.22.0
+go install github.com/ServiceWeaver/weaver/cmd/weaver@v0.24.3
 export PATH="$PATH:$HOME/go/bin"
 echo 'export PATH="$PATH:$HOME/go/bin"' >> ~/.bashrc
 source ~/.bashrc

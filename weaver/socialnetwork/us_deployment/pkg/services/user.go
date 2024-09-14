@@ -24,8 +24,8 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type UserService interface {
 	Login(ctx context.Context, reqID int64, username string, password string) (string, error)
-	RegisterUserWithId(ctx context.Context, reqID int64, firstName string, lastName string, username string, password string, userID string) error
-	RegisterUser(ctx context.Context, reqID int64, firstName string, lastName string, username string, password string) error
+	//RegisterUserWithId(ctx context.Context, reqID int64, firstName string, lastName string, username string, password string, userID string) error
+	//RegisterUser(ctx context.Context, reqID int64, firstName string, lastName string, username string, password string) error
 	//UploadCreatorWithUserId(ctx context.Context, reqID int64, userID int64, username string, new bool) error
 	//UploadCreatorWithUsername(ctx context.Context, reqID int64, username string, new bool) error
 	GetUserId(ctx context.Context, reqID int64, username string) (string, error)
@@ -47,7 +47,7 @@ type Claims struct {
 type userService struct {
 	weaver.Implements[UserService]
 	weaver.WithConfig[userServiceOptions]
-	socialGraphService weaver.Ref[SocialGraphService]
+	//socialGraphService weaver.Ref[SocialGraphService]
 	//composePostService weaver.Ref[ComposePostService]
 	machineID        string
 	counter          int64
@@ -198,7 +198,7 @@ func (u *userService) Login(ctx context.Context, reqID int64, username string, p
 	return tokenStr, nil
 }
 
-func (u *userService) RegisterUserWithId(ctx context.Context, reqID int64, firstName string, lastName string, username string, password string, userID string) error {
+/*func (u *userService) RegisterUserWithId(ctx context.Context, reqID int64, firstName string, lastName string, username string, password string, userID string) error {
 	logger := u.Logger(ctx)
 	logger.Debug("entering RegisterUserWithId", "req_id", reqID, "first_name", firstName, "last_name", lastName, "username", username, "password", password, "user_id", userID)
 
@@ -253,7 +253,7 @@ func (u *userService) RegisterUser(ctx context.Context, reqID int64, firstName s
 }
 
 // UploadCreatorWithUserId returns a new creator object
-/*func (u *userService) UploadCreatorWithUserId(ctx context.Context, reqID int64, userID int64, username string, new bool) error {
+func (u *userService) UploadCreatorWithUserId(ctx context.Context, reqID int64, userID int64, username string, new bool) error {
 	logger := u.Logger(ctx)
 	logger.Debug("entering UploadCreatorWithUserId", "req_id", reqID, "user_id", userID, "username", username)
 	creator := model.Creator{
