@@ -1,0 +1,11 @@
+# 16 worker (2*16 threads)
+# mongo xcweaver
+    # requests:			1422
+    # received notifications @ US:	1422 (100.00%)
+    # inconsistencies @ US:		0
+    % inconsistencies @ US:		0.00%
+    > avg. post notification duration:	39.17229254571026ms
+    > avg. write post duration:		4.7545710267229255ms
+    > avg. read post duration:		28.470464135021096ms
+    > avg. queue duration @ US:		4.783286438931601ms
+  

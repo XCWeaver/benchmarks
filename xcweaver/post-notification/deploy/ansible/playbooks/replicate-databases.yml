@@ -1,0 +1,90 @@
+- hosts: xcweaver-pn-db-eu
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Get the mysql1 container name
+      shell: >
+        sudo docker ps --format {% raw %}'{{.Names}}'{% endraw %} | grep '^post_notification_mysql1'
+      register: mysql1_container_name
+      changed_when: false
+
+    - name: Execute master.sql on mysql1
+      shell: >
+          sudo docker exec -i {{ mysql1_container_name.stdout }} mysql -u root -proot_password < /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/clustering/mysql/master.sql
+      args:
+        executable: /bin/bash
+
+    - name: Get MySQL Master status
+      command: sudo docker exec {{ mysql1_container_name.stdout }} mysql -u root -proot_password -e 'SHOW MASTER STATUS'
+      register: master_status
+
+    - name: Debug master status output
+      debug:
+        var: master_status.stdout
+
+    - name: Extract master log file and position
+      set_fact:
+        log_details: "{{ master_status.stdout.split('\n')[1].split('\t') }}"
+      when: master_status.stdout.split('\n') | length >= 2
+
+    - name: Set master log file and position
+      set_fact:
+        master_log_file: "{{ log_details[0] }}"
+        master_log_pos: "{{ log_details[1] }}"
+      when: log_details | length >= 2
+
+- hosts: xcweaver-pn-db-us
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Set master log variables from xcweaver-pn-db-eu host
+      set_fact:
+        master_log_file: "{{ hostvars['xcweaver-pn-db-eu']['master_log_file'] }}"
+        master_log_pos: "{{ hostvars['xcweaver-pn-db-eu']['master_log_pos'] }}"
+
+    - name: Debug master log file and position
+      debug:
+        msg: "Master Log File: {{ master_log_file }}, Master Log Position: {{ master_log_pos }}"
+
+    - name: Read replica.sql file
+      slurp:
+        src: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/clustering/mysql/replica.sql
+      register: replica_sql_content
+
+    - name: Replace placeholders in replica.sql
+      copy:
+        content: "{{ replica_sql_content.content | b64decode | replace('{{MASTER_LOG_FILE}}', master_log_file) | replace('{{MASTER_LOG_POS}}', master_log_pos) }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/clustering/mysql/replica_aux.sql
+
+    - name: Get the mysql2 container name
+      shell: >
+        sudo docker ps --format {% raw %}'{{.Names}}'{% endraw %} | grep '^post_notification_mysql2'
+      register: mysql2_container_name
+      changed_when: false
+
+    - name: Execute replica_aux.sql on mysql2
+      shell: >
+          sudo docker exec -i {{ mysql2_container_name.stdout }} mysql -u root -proot_password < /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/clustering/mysql/replica_aux.sql
+      args:
+        executable: /bin/bash
+
+
+- hosts: xcweaver-pn-db-eu
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Execute key-value_table.sql on mysql1
+      shell: >
+          sudo docker exec -i {{ mysql1_container_name.stdout }} mysql -u root -proot_password < /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/clustering/mysql/key-value_table.sql
+      args:
+        executable: /bin/bash
+
+- hosts: swarm_workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Create envoy containers
+      shell: sudo docker run --rm --name envoy-container -d -p 8001:8001 -p 6381:{{ hostvars[inventory_hostname]['internal_memorystore_port'] }} -v $(pwd)/envoy.yaml:/envoy.yaml envoyproxy/envoy:v1.21.0 -c /envoy.yaml
+      args:
+        chdir: "{{ app_folder_name }}"
+        executable: /bin/bash

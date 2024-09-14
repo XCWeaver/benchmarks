@@ -1,0 +1,11 @@
+- hosts: 
+    swarm_workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Upload envoy config file
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}
+      with_items:
+        - "{{ base_dir }}/deploy/tmp/envoy.yaml"

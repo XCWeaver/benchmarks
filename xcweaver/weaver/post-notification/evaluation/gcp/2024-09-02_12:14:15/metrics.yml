@@ -1,0 +1,11 @@
+avg_consistency_window_ms: 101836.04
+avg_queue_duration_ms: 86.05
+avg_read_post_duration_ms: 101743.12
+avg_write_post_duration_ms: 12.96
+consistency_window_median_ms: 123795.0
+num_inconsistencies: 45347
+num_notifications_received: 185183
+num_notifications_sent: 185183
+num_requests: 185183
+per_inconsistencies: 24.49
+per_notifications_received: 100.0

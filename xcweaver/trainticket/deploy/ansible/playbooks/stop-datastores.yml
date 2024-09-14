@@ -1,0 +1,10 @@
+---
+- hosts: trainticket-db
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Stop docker-compose
+      shell: sudo docker-compose down -v
+      args:
+        chdir: "{{ app_folder_name }}"
+        executable: /bin/bash

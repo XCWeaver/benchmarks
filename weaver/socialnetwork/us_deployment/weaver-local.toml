@@ -1,0 +1,61 @@
+# --------
+# Services
+# --------
+
+["us_deployment/pkg/services/SocialGraphService"]
+mongodb_address     = "localhost"
+redis_address       = "localhost"
+redis_port          = 6384
+mongodb_port        = 27017
+region              = "europe-west3"
+
+["us_deployment/pkg/services/UserService"]
+mongodb_address     = "localhost"
+memcached_address   = "localhost"
+mongodb_port        = 27017
+memcached_port      = 11214
+region              = "europe-west3"
+
+# WRITE HOME TIMELINE ACCESSES STORAGES IN "US"
+["us_deployment/pkg/services/WriteHomeTimelineService"]
+rabbitmq_address    = "localhost"
+mongodb_address     = "localhost"
+redis_address       = "localhost" #uses HomeTimelineService cache (redis)
+mongodb_port        = 27018
+redis_port          = 6386
+rabbitmq_port       = 5673
+num_workers         = 16
+region              = "us-central1"
+
+# Update HOME TIMELINE ACCESSES STORAGES IN "US"
+["us_deployment/pkg/services/UpdateHomeTimelineService"]
+rabbitmq_address    = "localhost"
+mongodb_address     = "localhost"
+redis_address       = "localhost" #uses HomeTimelineService cache (redis)
+mongodb_port        = 27018
+redis_port          = 6386
+rabbitmq_port       = 5673
+num_workers         = 16
+region              = "us-central1"
+
+# wrk2 api
+["github.com/ServiceWeaver/weaver/Main"]
+region              = "europe-west3"
+
+# ----------
+# Deployment
+# ----------
+
+[single]
+listeners.socialnetwork = {address = "0.0.0.0:12346"}
+
+[multi]
+listeners.socialnetwork = {address = "0.0.0.0:12346"}
+
+[serviceweaver]
+binary = "./us_deployment"
+name = "us_deployment"
+
+[gke]
+regions = ["europe-west3"]
+listeners.wrk2 = {public_hostname = "weaver.dsb.socialnetwork.eu"}

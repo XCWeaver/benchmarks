@@ -1,0 +1,146 @@
+---
+- hosts: 
+    app_wrk2
+    app_services
+    swarm_manager
+    swarm_workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Create app directory
+      file:
+        path: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}"
+        state: directory
+
+# ----------
+# DATASTORES
+# ----------
+- hosts: 
+    swarm_manager
+    swarm_workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Create dependencies script in datastore nodes
+      copy:
+        src: "{{ base_dir }}/deploy/scripts/deps-datastore.sh"
+        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/"
+        mode: u=rwx,g=rx,o=rx # 755 permissions
+
+    - name: Install dependencies in datastore nodes
+      shell: ./deps-datastore.sh
+      args:
+        executable: /bin/bash
+  
+    - name: Upload docker-compose.yml and envoy.yaml files and clustering folder to datastore nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/"
+        use_ssh_args: yes
+      with_items:
+        - "{{ base_dir }}/docker-compose.yml"
+        - "{{ base_dir }}/clustering"
+        - "{{ base_dir }}/deploy/tmp/envoy.yaml"
+
+    - name: Build docker images in datastore nodes
+      docker_image:
+        name: "{{ item.name }}"
+        build:
+          path: "{{ item.path }}"
+        source: build
+      with_items:
+        - { name: "mongodb-delayed:4.4.6", path: "{{ app_folder_name }}/clustering/mongodb-delayed" }
+        - { name: "mongodb-setup:4.4.6",   path: "{{ app_folder_name }}/clustering/mongodb-setup/post-storage" }
+        - { name: "rabbitmq-setup:3.8",    path: "{{ app_folder_name }}/clustering/rabbitmq-setup/notifier" }
+        - { name: "redis-setup:latest",    path: "{{ app_folder_name }}/clustering/redis-im" }
+      # enable to use privilege escalation
+      # docker requires running with sudo
+      become: true
+
+    # sanity check
+    - name: Verify docker images
+      docker_image_info:
+        name: "{{ item }}"
+      with_items:
+        mongodb-delayed:4.4.6
+        mongodb-setup:4.4.6
+        rabbitmq-setup:3.8
+        redis-setup:latest
+      # enable to use privilege escalation
+      # docker requires running with sudo
+      become: true
+
+
+# -----------
+# APPLICATION
+# -----------
+- hosts: 
+    app_wrk2
+    app_services
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Create dependencies script in app nodes
+      copy:
+        src: "{{ base_dir }}/deploy/scripts/deps-app.sh"
+        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/"
+        mode: u=rwx,g=rx,o=rx # 755 permissions
+
+    - name: Install dependencies in app nodes
+      shell: ./deps-app.sh
+      args:
+        executable: /bin/bash
+
+    - name: Copy manager.py script, requirements.txt and gcp folder to app wrk2 node
+      copy:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/
+        mode: u=rwx,g=rx,o=rx # 755 permissions
+      with_items:
+        - "{{ base_dir }}/manager.py"
+        - "{{ base_dir }}/requirements.txt"
+        - "{{ base_dir }}/gcp"
+
+    - name: Install python requirements
+      shell: pip3 install -r requirements.txt
+      args:
+        chdir: "{{ app_folder_name }}"
+
+- hosts: 
+    app_services
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Upload application for deploying post-notification @ weaver in app service nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/
+        use_ssh_args: yes
+      with_items:
+        - "{{ base_dir }}/mongo-rabbitmq"
+        - "{{ base_dir }}/mysql-rabbitmq"
+        - "{{ base_dir }}/redis-rabbitmq"
+
+    - name: Upload weaver config files for deploying post-notification redis-rabbitmq @ weaver in app service nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/redis-rabbitmq/{{ hostvars[inventory_hostname]['region'] }}_deployment
+        use_ssh_args: yes
+      with_items:
+        - "{{ base_dir }}/deploy/tmp/redis-rabbitmq/weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"
+
+    - name: Upload weaver config files for deploying post-notification mongo-rabbitmq @ weaver in app service nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/mongo-rabbitmq/{{ hostvars[inventory_hostname]['region'] }}_deployment
+        use_ssh_args: yes
+      with_items:
+        - "{{ base_dir }}/deploy/tmp/mongo-rabbitmq/weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"
+
+    - name: Upload weaver config files for deploying post-notification mysql-rabbitmq @ weaver in app service nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/mysql-rabbitmq/{{ hostvars[inventory_hostname]['region'] }}_deployment
+        use_ssh_args: yes
+      with_items:
+        - "{{ base_dir }}/deploy/tmp/mysql-rabbitmq/weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"

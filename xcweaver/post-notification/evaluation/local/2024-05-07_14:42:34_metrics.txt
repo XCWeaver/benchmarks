@@ -1,0 +1,11 @@
+# 1 worker (2*1 threads)
+# redis xcweaver
+    # requests:			2011
+    # received notifications @ US:	2011 (100.00%)
+    # inconsistencies @ US:		0
+    % inconsistencies @ US:		0.00%
+    > avg. post notification duration:	42658.10079127227ms
+    > avg. write post duration:		0.40825494792439393ms
+    > avg. read post duration:		159.3481063865563ms
+    > avg. queue duration @ US:		42494.07715844238ms
+  

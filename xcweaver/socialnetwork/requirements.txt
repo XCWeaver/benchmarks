@@ -1,0 +1,10 @@
+requests
+bs4
+toml
+pyyaml
+tqdm
+google-api-python-client
+plumbum
+jinja2
+ansible
+plumbum

@@ -1,0 +1,21 @@
+["us_deployment/Notifier"]
+rabbitmq_address = "34.72.10.149"
+rabbitmq_port = "5673"
+rabbitmq_user = "guest"
+rabbitmq_password = "guest"
+num_workers = 16
+
+["us_deployment/Post_storage_america"]
+redis_address = "34.72.10.149"
+redis_port = "6380"
+redis_password = ""
+
+[serviceweaver]
+binary = "./us_deployment"
+
+[single]
+
+[multi]
+
+[gke]
+regions = [ "us-west4",]

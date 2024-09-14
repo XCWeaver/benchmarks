@@ -1,0 +1,26 @@
+---
+- hosts: app_services
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+
+    - name: Build socialnetwork in app service nodes
+      shell: /usr/local/go/bin/go build
+      args:
+        chdir: "{{ app_folder_name }}/{{ hostvars[inventory_hostname]['region'] }}_deployment"
+        executable: /bin/bash
+
+    - name: Start socialnetwork in app service nodes
+      shell: >
+        /usr/bin/tmux new-session -s socialnetwork -d \
+          "$HOME/go/bin/weaver multi deploy weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"
+      args:
+        chdir: "{{ app_folder_name }}/{{ hostvars[inventory_hostname]['region'] }}_deployment"
+        executable: /bin/bash
+
+    - name: Verify if socialnetwork is running in eu app service node
+      wait_for:
+        host: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
+        port: "{{ hostvars[inventory_hostname]['app_port'] | int }}"
+        state: started
+        timeout: 30

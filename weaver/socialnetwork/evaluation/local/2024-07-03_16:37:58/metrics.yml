@@ -1,0 +1,9 @@
+avg_compose_post_duration_ms: 0.0
+avg_queue_duration_ms: 0.0
+avg_read_post_duration_msg: 0.0
+avg_write_post_duration_msg: 0.0
+num_composed_posts: 0
+num_inconsistencies: 0
+num_notifications_sent: 0
+num_received_notifications: 0
+per_inconsistencies: 0.0

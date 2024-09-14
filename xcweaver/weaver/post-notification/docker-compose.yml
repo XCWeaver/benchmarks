@@ -1,0 +1,196 @@
+version: '3.9'
+services:
+  # ------------
+  # Post-Storage: REDIS
+  # ------------
+  post-storage-redis-eu:
+    image: redis-setup:latest
+    hostname: post-storage-redis-eu
+    container_name: post-storage-redis-eu
+    ports:
+      - 6379:6379
+    cap_add:
+      - NET_ADMIN
+    restart: 'no'
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-eu]
+    networks:
+      - post_notification_network
+  post-storage-redis-us:
+    image: redis-setup:latest
+    hostname: post-storage-redis-us
+    container_name: post-storage-redis-us
+    ports:
+      - 6380:6379
+    cap_add:
+      - NET_ADMIN
+    command: 'redis-server --slaveof post-storage-redis-eu 6379 --replica-read-only no'
+    restart: 'no'
+    links:
+      - post-storage-redis-eu
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-us]
+    networks:
+      - post_notification_network
+
+  post-storage-mongodb-setup:
+    image: mongodb-setup:4.4.6
+    restart: 'always'
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-manager]
+      restart_policy:
+        condition: on-failure
+        delay: 1s
+        max_attempts: 3
+    networks:
+      - post_notification_network
+  post-storage-mongodb-eu:
+    image: mongodb-delayed:4.4.6
+    ports:
+      - 27017:27017
+    cap_add:
+      - NET_ADMIN
+    hostname: post-storage-mongodb-eu
+    command: bash -c "mongod --bind_ip 0.0.0.0 --slowms 999999 --dbpath /ramdata --syncdelay 0 --journalCommitInterval 500 --wiredTigerCacheSizeGB 1 --replSet rs0 --oplogSize 128"
+    volumes:
+      - type: tmpfs
+        target: /ramdata
+        tmpfs:
+          size: 3000000000
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-eu]
+    networks:
+      - post_notification_network
+  post-storage-mongodb-us:
+    image: mongodb-delayed:4.4.6
+    ports:
+      - 27018:27017
+    cap_add:
+      - NET_ADMIN
+    hostname: post-storage-mongodb-us
+    command: bash -c "mongod --bind_ip 0.0.0.0 --slowms 999999 --dbpath /ramdata --syncdelay 0 --journalCommitInterval 500 --wiredTigerCacheSizeGB 1 --replSet rs0 --oplogSize 128"
+    volumes:
+      - type: tmpfs
+        target: /ramdata
+        tmpfs:
+          size: 3000000000
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-us]
+    networks:
+      - post_notification_network
+
+  mysql1:
+    image: mysql:8.0
+    container_name: mysql1
+    hostname: mysql1
+    ports:
+      - "3307:3306"
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-eu]
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+      MYSQL_REPLICATION_MODE: master
+      MYSQL_REPLICATION_USER: repluser
+      MYSQL_REPLICATION_PASSWORD: replpassword
+    command:
+      --server-id=1 --log-bin='mysql-bin-1' --binlog_format='ROW'
+    networks:
+      - post_notification_network
+
+  mysql2:
+    image: mysql:8.0
+    container_name: mysql2
+    hostname: mysql2
+    ports:
+      - "3308:3306"
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-us]
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+      MYSQL_REPLICATION_MODE: slave
+      MYSQL_REPLICATION_USER: repluser
+      MYSQL_REPLICATION_PASSWORD: replpassword
+    depends_on:
+      - mysql1
+    command:
+      --server-id=2
+    networks:
+      - post_notification_network
+
+
+  # ---------------
+  # QUEUE: RABBITMQ
+  # ---------------
+
+  notifier-rabbitmq-setup:
+    image: rabbitmq-setup:3.8
+    restart: 'no'
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "NOTIFIER-RABBITMQ"
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-manager]
+      restart_policy:
+        condition: on-failure
+        delay: 1s
+        max_attempts: 3
+    networks:
+      - post_notification_network
+  notifier-rabbitmq-eu:
+    image: rabbitmq:3.8-management
+    hostname: notifier-rabbitmq-eu
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "NOTIFIER-RABBITMQ"
+      RABBITMQ_DEFAULT_VHOST: "/"
+      RABBITMQ_ENABLED_PLUGINS_FILE: "/etc/rabbitmq/enabled_plugins"
+    ports:
+      - 15672:15672
+      - 5672:5672
+    restart: 'no'
+    volumes:
+      - ./clustering/config/rabbitmq/notifier-rabbitmq-eu-definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./clustering/config/rabbitmq/notifier-rabbitmq-eu.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./clustering/config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-eu]
+    networks:
+      - post_notification_network
+  notifier-rabbitmq-us:
+    image: rabbitmq:3.8-management
+    hostname: notifier-rabbitmq-us
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "/"
+      RABBITMQ_ENABLED_PLUGINS_FILE: "/etc/rabbitmq/enabled_plugins"
+      RABBITMQ_ERLANG_COOKIE: "NOTIFIER-RABBITMQ"
+    ports:
+      - 15673:15672
+      - 5673:5672
+    restart: 'no'
+    volumes:
+      - ./clustering/config/rabbitmq/notifier-rabbitmq-us-definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./clustering/config/rabbitmq/notifier-rabbitmq-us.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./clustering/config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    deploy:
+      placement:
+        constraints: [node.hostname == weaver-pn-db-us]
+    networks:
+      - post_notification_network
+      
+networks:
+  post_notification_network:
+    external:
+      name: post_notification_network

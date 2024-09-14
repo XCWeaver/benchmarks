@@ -1,0 +1,11 @@
+# 1 worker (2*1 threads)
+# mysql xcweaver
+    # requests:			1268
+    # received notifications @ US:	1268 (100.00%)
+    # inconsistencies @ US:		0
+    % inconsistencies @ US:		0.00%
+    > avg. post notification duration:	248593.5552050473ms
+    > avg. write post duration:		8.923501577287066ms
+    > avg. read post duration:		1192.993690851735ms
+    > avg. queue duration @ US:		246816.07255520506ms
+  

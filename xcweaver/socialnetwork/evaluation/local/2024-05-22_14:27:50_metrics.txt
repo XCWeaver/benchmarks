@@ -1,0 +1,10 @@
+
+    # composed posts:			3013
+    # received notifications @ US:	3012 (99.97%)
+    # inconsistencies @ US:		0
+    % inconsistencies @ US:		0.00%
+    > avg. compose post duration:	20.54ms
+    > avg. write post duration:		6.80ms
+    > avg. read post duration:		7.29ms
+    > avg. queue duration @ US:		1520.30ms
+  

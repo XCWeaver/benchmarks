@@ -1,0 +1,10 @@
+       Value     Percentile TotalCount 1/(1-Percentile)
+
+#[Mean    =        0.000, StdDeviation   =        0.000]
+#[Max     =        0.000, TotalCount     =        0.000]
+#[Buckets =           12, SubBuckets     =         2048]
+
+----------------------------------------------------------
+ Requests/sec:     50.056655335599544
+Latency Median:     0
+Fails: 0

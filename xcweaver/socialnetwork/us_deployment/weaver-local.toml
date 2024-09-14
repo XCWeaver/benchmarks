@@ -1,0 +1,67 @@
+# --------
+# Services
+# --------
+
+["us_deployment/pkg/services/SocialGraphService"]
+mongodb_address     = "localhost"
+redis_address       = "localhost"
+redis_port          = 6384
+mongodb_port        = 27017
+region              = "europe-west3"
+
+["us_deployment/pkg/services/UserService"]
+mongodb_address     = "localhost"
+memcached_address   = "localhost"
+mongodb_port        = 27017
+memcached_port      = 11214
+region              = "europe-west3"
+
+# WRITE HOME TIMELINE ACCESSES STORAGES IN "US"
+["us_deployment/pkg/services/WriteHomeTimelineService"]
+redis_address       = "localhost" #uses HomeTimelineService cache (redis)
+redis_port          = 6386
+num_workers         = 16
+region              = "us-central1"
+
+# UPDATE HOME TIMELINE ACCESSES STORAGES IN "US"
+["us_deployment/pkg/services/UpdateHomeTimelineService"]
+redis_address       = "localhost" #uses HomeTimelineService cache (redis)
+redis_port          = 6386
+num_workers         = 16
+region              = "us-central1"
+
+# wrk2 api
+["github.com/ServiceWeaver/weaver/Main"]
+region              = "europe-west3"
+
+# ----------
+# Deployment
+# ----------
+
+[single]
+listeners.socialnetwork = {address = "0.0.0.0:12346"}
+antipodeAgents.rabbitClientWriteHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.rabbitClientCompose = {datastoreType = "RabbitMQ", host = "localhost", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.rabbitClientUpdateHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.mongoClientPostStorage = {datastoreType = "MongoDB", host = "localhost", port = "27017", datastore = "post-storage"}
+antipodeAgents.mongoClientWriteHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
+antipodeAgents.mongoClientUpdateHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
+
+[multi]
+listeners.socialnetwork = {address = "0.0.0.0:12346"}
+antipodeAgents.rabbitClientWriteHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.rabbitClientCompose = {datastoreType = "RabbitMQ", host = "localhost", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.rabbitClientUpdate = {datastoreType = "RabbitMQ", host = "localhost", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.rabbitClientUpdateHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.mongoClientPostStorage = {datastoreType = "MongoDB", host = "localhost", port = "27017", datastore = "post-storage"}
+antipodeAgents.mongoClientWriteHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
+antipodeAgents.mongoClientUpdateHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
+
+
+[serviceweaver]
+binary = "./us_deployment"
+name = "us_deployment"
+
+[gke]
+regions = ["europe-west3"]
+listeners.wrk2 = {public_hostname = "weaver.dsb.socialnetwork.eu"}

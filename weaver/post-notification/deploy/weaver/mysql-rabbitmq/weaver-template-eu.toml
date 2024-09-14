@@ -1,0 +1,27 @@
+["eu_deployment/Notifier"]
+rabbitmq_address    = "localhost"
+rabbitmq_port       = "5672"
+rabbitmq_user    = "admin"
+rabbitmq_password       = "admin"
+
+["eu_deployment/Post_storage_europe"]
+mysql_address       = "127.0.0.1"
+mysql_port          = "3307"
+mysql_password          = "root_password"
+mysql_user          = "root"
+mysql_datastore          = "post_notification"
+
+
+[serviceweaver]
+binary = "./eu_deployment"
+
+[single]
+listeners.post_notification = {address = "0.0.0.0:12345"}
+
+[multi]
+listeners.post_notification = {address = "0.0.0.0:12345"}
+
+
+[gke]
+regions = ["europe-west6"]
+listeners.post_notification = {public_hostname = "hello.com"}

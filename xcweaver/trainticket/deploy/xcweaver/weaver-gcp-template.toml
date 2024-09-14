@@ -1,0 +1,16 @@
+# ----------
+# Deployment
+# ----------
+
+[single]
+listeners.wrk2 = {address = "0.0.0.0:12345"}
+
+[multi]
+listeners.wrk2 = {address = "0.0.0.0:12345"}
+
+[serviceweaver]
+binary = "./trainticket"
+
+[gke]
+regions = ["europe-west3"]
+listeners.wrk2 = {public_hostname = "weaver.trainticket.eu"}

@@ -1,0 +1,7 @@
+avg_order_duration_ms: 70.85
+consistency_window_median_ms: 50.0
+consistency_window_ms: 56.12
+num_inconsistencies: 30949
+num_orders: 33498
+num_tickets_canceled: 33498
+per_inconsistencies: 92.39

@@ -1,0 +1,12 @@
+#mongo
+avg_consistency_window_ms: 215.7
+avg_queue_duration_ms: 60.39
+avg_read_post_duration_ms: 2.83
+avg_write_post_duration_ms: 1.41
+consistency_window_median_ms: 200.0
+num_inconsistencies: 0
+num_notifications_received: 1502
+num_notifications_sent: 1502
+num_requests: 1502
+per_inconsistencies: 0.0
+per_notifications_received: 100.0

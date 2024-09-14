@@ -1,0 +1,27 @@
+---
+- hosts: app_services
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+
+    - name: Build post-notification in app service nodes
+      shell: /usr/local/go/bin/go build
+      args:
+        chdir: "{{ app_folder_name }}/{{deployment_folder}}/{{ hostvars[inventory_hostname]['region'] }}_deployment"
+        executable: /bin/bash
+
+    - name: Start post-notification in app service nodes
+      shell: >
+        /usr/bin/tmux new-session -s post-notification -d \
+          "$HOME/go/bin/weaver multi deploy weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"
+      args:
+        chdir: "{{ app_folder_name }}/{{deployment_folder}}/{{ hostvars[inventory_hostname]['region'] }}_deployment"
+        executable: /bin/bash
+
+    - name: Verify if post-notification is running
+      wait_for:
+        host: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
+        port: "{{ hostvars[inventory_hostname]['app_port'] | int }}"
+        state: started
+        timeout: 30
+

@@ -1,0 +1,23 @@
+["us_deployment/Notifier"]
+rabbitmq_address    = "localhost"
+rabbitmq_port       = "5673"
+rabbitmq_user    = "admin"
+rabbitmq_password       = "admin"
+
+["us_deployment/Post_storage_america"]
+redis_address       = "localhost"
+redis_port          = "6380"
+redis_password          = ""
+
+
+[serviceweaver]
+binary = "./us_deployment"
+
+[single]
+listeners.post_notification = {address = "0.0.0.0:12346"}
+
+[multi]
+listeners.post_notification = {address = "0.0.0.0:12346"}
+
+[gke]
+regions = ["us-west4"]

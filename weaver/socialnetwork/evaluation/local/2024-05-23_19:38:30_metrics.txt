@@ -1,0 +1,10 @@
+
+    # updated posts:			100
+    # received notifications @ US:	100 (100.00%)
+    # inconsistencies @ US:		0
+    % inconsistencies @ US:		0.00%
+    > avg. update post duration:	7.76ms
+    > avg. update post duration:		2.01ms
+    > avg. read post duration:		0.99ms
+    > avg. queue duration @ US:		1.79ms
+  

@@ -1,0 +1,12 @@
+avg_compose_post_duration_ms: 10634.56
+avg_latency_throughput_duration_ms: 10549.7
+avg_queue_duration_ms: 65.46
+avg_read_post_duration_ms: 173.34
+avg_write_post_duration_ms: 15.24
+consistency_window_ms: 5497.91
+latency_avg_ms: 10500.48
+num_composed_posts: 442
+num_inconsistencies: 0
+num_notifications_sent: 442
+num_received_notifications: 442
+per_inconsistencies: 100.0

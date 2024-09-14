@@ -1,0 +1,5 @@
+consistency_window_median_ms: 1.0
+consistency_window_ms: 0.75
+num_inconsistencies: 3004
+num_tickets_canceled: 3004
+per_inconsistencies: 100.0

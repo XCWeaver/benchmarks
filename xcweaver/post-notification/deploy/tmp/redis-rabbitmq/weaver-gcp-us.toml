@@ -1,0 +1,15 @@
+[serviceweaver]
+binary = "./us_deployment"
+
+[single]
+listeners.post_notification = {address = "0.0.0.0:12345"}
+antipodeAgents.clientRedis = {datastoreType = "Redis", host = "34.122.249.111", port = "6381", password = "", datastore = "posts"}
+antipodeAgents.clientRabbitMQ = {datastoreType = "RabbitMQ", host = "34.122.249.111", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+
+[multi]
+listeners.post_notification = {address = "0.0.0.0:12345"}
+antipodeAgents.clientRedis = {datastoreType = "Redis", host = "34.122.249.111", port = "6381", password = "", datastore = "posts"}
+antipodeAgents.clientRabbitMQ = {datastoreType = "RabbitMQ", host = "34.122.249.111", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+
+[gke]
+regions = ["us-west4"]

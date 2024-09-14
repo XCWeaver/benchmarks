@@ -1,0 +1,134 @@
+---
+- hosts: 
+    app_wrk2
+    app_services
+    swarm_manager
+    swarm_workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Create app directory
+      file:
+        path: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}"
+        state: directory
+
+# ----------
+# DATASTORES
+# ----------
+- hosts: 
+    swarm_manager
+    swarm_workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Create dependencies script in datastore nodes
+      copy:
+        src: "{{ base_dir }}/deploy/scripts/deps-datastore.sh"
+        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/"
+        mode: u=rwx,g=rx,o=rx # 755 permissions
+
+    - name: Install dependencies in datastore nodes
+      shell: ./deps-datastore.sh
+      args:
+        executable: /bin/bash
+  
+    - name: Upload docker folder and docker-compose.yml file to datastore nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/"
+      with_items:
+        - "{{ base_dir }}/docker"
+        - "{{ base_dir }}/docker-compose.yml"
+
+    - name: Build docker images in datastore nodes
+      docker_image:
+        name: "{{ item.name }}"
+        build:
+          path: "{{ item.path }}"
+        source: build
+      with_items:
+        - { name: "mongodb-delayed:4.4.6", path: "{{ app_folder_name }}/docker/mongodb-delayed" }
+        - { name: "mongodb-setup:4.4.6",   path: "{{ app_folder_name }}/docker/mongodb-setup/post-storage" }
+        - { name: "rabbitmq-setup:3.8",    path: "{{ app_folder_name }}/docker/rabbitmq-setup/write-home-timeline" }
+      # enable to use privilege escalation
+      # docker requires running with sudo
+      become: true
+
+    # sanity check
+    - name: Verify docker images
+      docker_image_info:
+        name: "{{ item }}"
+      with_items:
+        mongodb-delayed:4.4.6
+        mongodb-setup:4.4.6
+        rabbitmq-setup:3.8
+      # enable to use privilege escalation
+      # docker requires running with sudo
+      become: true
+
+# -----------
+# APPLICATION
+# -----------
+- hosts: 
+    app_wrk2
+    app_services
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Create dependencies script in app nodes
+      copy:
+        src: "{{ base_dir }}/deploy/scripts/deps-app.sh"
+        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/"
+        mode: u=rwx,g=rx,o=rx # 755 permissions
+
+    - name: Install dependencies in app nodes
+      shell: ./deps-app.sh
+      args:
+        executable: /bin/bash
+
+    - name: Copy manager.py script, requirements.txt and gcp folder to app wrk2 node
+      copy:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/
+        mode: u=rwx,g=rx,o=rx # 755 permissions
+      with_items:
+        - "{{ base_dir }}/manager.py"
+        - "{{ base_dir }}/requirements.txt"
+        - "{{ base_dir }}/gcp"
+
+    - name: Install python requirements
+      shell: pip3 install -r requirements.txt
+      args:
+        chdir: "{{ app_folder_name }}"
+
+    - name: clone wrk2 repository
+      shell: git clone https://github.com/TiagoMalhadas/wrk2.git
+      args:
+        chdir: "{{ app_folder_name }}"
+    - name: Copy wrk2 to socialnetwork folder
+      shell: sudo cp -r wrk2/wrk2/ .
+      args:
+        chdir: "{{ app_folder_name }}"
+    - name: Compile wrk2
+      shell: sudo make
+      args:
+        chdir: "{{ app_folder_name }}/wrk2"
+
+- hosts: 
+    app_services
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Upload application for deploying socialnetwork @ weaver in app service nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/
+      with_items:
+        - "{{ base_dir }}/{{ hostvars[inventory_hostname]['region'] }}_deployment"
+        
+    - name: Upload weaver config files in app service nodes
+      synchronize:
+        src: "{{ item }}"
+        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/{{ hostvars[inventory_hostname]['region'] }}_deployment
+      with_items:
+        - "{{ base_dir }}/deploy/tmp/weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"

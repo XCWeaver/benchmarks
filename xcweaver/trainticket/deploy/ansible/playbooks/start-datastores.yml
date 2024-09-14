@@ -1,0 +1,11 @@
+---
+- hosts: 
+    trainticket-db
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Start datastores
+      shell: sudo docker-compose up -d
+      args:
+        chdir: "{{ app_folder_name }}"
+        executable: /bin/bash

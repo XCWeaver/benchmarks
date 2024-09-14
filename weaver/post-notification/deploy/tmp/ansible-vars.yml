@@ -1,0 +1,12 @@
+app_folder_name: post-notification
+base_dir: /home/tmalhadas/XCWeaver/tese/weaver/post-notification
+deployment_folder: null
+deployment_type: gcp
+duration: '300'
+num_swarm_nodes: 3
+num_swarm_services: 10
+rate: '300'
+stack: post-notification
+swarm_advertise_port: 2377
+threads: '30'
+workload_timestamp: 2024-09-03_20:27:06

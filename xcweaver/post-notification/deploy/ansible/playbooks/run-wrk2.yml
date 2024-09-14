@@ -1,0 +1,21 @@
+---
+- hosts:
+    app_wrk2
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Running wrk2 in remote machine
+      shell: /usr/bin/python3 manager.py wrk2-vm --gcp -t {{threads}} -d {{duration}} -r {{rate}} -ts {{workload_timestamp}}
+      args:
+        chdir: "{{ app_folder_name }}"
+      environment: 
+        # path for Go and Weaver binaries
+        # FIXME: for some reason, ansible is not sourcing the ~/.bashrc file
+        PATH: $PATH:/usr/local/go/bin:/home/{{ hostvars[inventory_hostname]['user'] }}/go/bin:/home/{{ hostvars[inventory_hostname]['user'] }}/.go/bin
+        executable: /bin/bash
+
+    - name: Upload workload to host machine
+      synchronize:
+        src: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/evaluation/gcp/{{ workload_timestamp }}/workload.out"
+        dest: "{{ base_dir }}/evaluation/gcp/{{ workload_timestamp }}/workload.out"
+        mode: pull

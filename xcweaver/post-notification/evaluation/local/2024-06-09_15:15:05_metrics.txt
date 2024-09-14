@@ -1,0 +1,10 @@
+
+    # requests:			2005
+    # received notifications @ US:	2005 (100.00%)
+    # inconsistencies @ US:		0
+    % inconsistencies @ US:		0.00%
+    > avg. post notification duration:	38585.00805119572ms
+    > avg. write post duration:		0.37357090405430415ms
+    > avg. read post duration:		150.2263782504781ms
+    > avg. queue duration @ US:		38430.08008161145ms
+  
