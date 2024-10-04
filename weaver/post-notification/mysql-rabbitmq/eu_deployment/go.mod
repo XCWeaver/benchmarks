@@ -1,4 +1,4 @@
-module eu_deployment
+module eu-deployment
 
 go 1.21.1
 

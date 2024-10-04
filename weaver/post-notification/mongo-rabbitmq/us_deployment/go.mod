@@ -1,4 +1,4 @@
-module us_deployment
+module us-deployment
 
 go 1.21.1
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/ServiceWeaver/weaver"
 )
@@ -17,16 +18,18 @@ func main() {
 
 type app struct {
 	weaver.Implements[weaver.Main]
-	notifier          weaver.Ref[Notifier]
-	post_storage      weaver.Ref[Post_storage_america]
-	post_notification weaver.Listener
+	notifier     weaver.Ref[Notifier]
+	post_storage weaver.Ref[PostStorageUs]
+	postnot      weaver.Listener
 }
 
 // serve is called by weaver.Run and contains the body of the application.
 func serve(ctx context.Context, app *app) error {
 
 	logger := app.Logger(ctx)
-	logger.Info("post-notification listener available", "address", app.post_notification)
+	logger.Info("post-notification listener available", "address", app.postnot)
+
+	go app.notifier.Get().ReadNotification(ctx)
 
 	post_storage := app.post_storage.Get()
 
@@ -46,5 +49,23 @@ func serve(ctx context.Context, app *app) error {
 			w.Write(jsonData)
 		}
 	})
-	return http.Serve(app.post_notification, nil)
+	// Serve the /inconsistencies endpoint.
+	http.HandleFunc("/inconsistencies", func(w http.ResponseWriter, r *http.Request) {
+		result, err := post_storage.GetInconsistencies(ctx)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		} else {
+			w.Header().Set("Content-Type", "text/plain")
+			resultStr := strconv.Itoa(result)
+
+			w.Write([]byte(resultStr))
+		}
+	})
+	// Serve the /reset endpoint.
+	http.HandleFunc("/reset", func(w http.ResponseWriter, r *http.Request) {
+		post_storage.Reset(ctx)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte("done!"))
+	})
+	return http.Serve(app.postnot, nil)
 }

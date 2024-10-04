@@ -23,7 +23,7 @@ type Notifier interface {
 // Implementation of the Notifier component.
 type notifier struct {
 	weaver.Implements[Notifier]
-	follower_Notify weaver.Ref[Follower_Notify]
+	follower_Notify weaver.Ref[FollowerNotify]
 	weaver.WithConfig[notifierOptions]
 	conn *amqp.Connection
 }
@@ -103,8 +103,6 @@ func (n *notifier) ReadNotification(ctx context.Context) error {
 		logger.Error("error consuming queue", "msg", err.Error())
 		return err
 	}
-
-	logger.Info("HERE")
 
 	for d := range msgs {
 		logger.Debug("processing messages")

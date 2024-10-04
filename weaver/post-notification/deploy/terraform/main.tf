@@ -9,7 +9,7 @@ module "gcp_create_storage_instance_manager" {
   source        = "./modules/gcp_create_instance"
   instance_name = "weaver-pn-db-manager"
   hostname      = "weaver-pn-db-manager.prod"
-  zone          = "europe-west3-a"
+  zone          = "europe-west6-a"
   image         = "debian-cloud/debian-11"
   providers = {
     google = google
@@ -20,7 +20,7 @@ module "gcp_create_storage_instance_eu" {
   source        = "./modules/gcp_create_instance"
   instance_name = "weaver-pn-db-eu"
   hostname      = "weaver-pn-db-eu.prod"
-  zone          = "europe-west3-a"
+  zone          = "europe-west6-a"
   image         = "debian-cloud/debian-11"
   providers = {
     google = google
@@ -38,33 +38,11 @@ module "gcp_create_storage_instance-us" {
   }
 }
 
-module "gcp_create_app_instance-eu" {
-  source        = "./modules/gcp_create_instance"
-  instance_name = "weaver-pn-app-eu"
-  hostname      = "weaver-pn-app-eu.prod"
-  zone          = "europe-west3-a"
-  image         = "debian-cloud/debian-11"
-  providers = {
-    google = google
-  }
-}
-
-module "gcp_create_app_instance-us" {
-  source        = "./modules/gcp_create_instance"
-  instance_name = "weaver-pn-app-us"
-  hostname      = "weaver-pn-app-us.prod"
-  zone          = "us-central1-a"
-  image         = "debian-cloud/debian-11"
-  providers = {
-    google = google
-  }
-}
-
 module "gcp_create_app_instance-wrk2" {
   source        = "./modules/gcp_create_wrk2_instance"
   instance_name = "weaver-pn-app-wrk2"
   hostname      = "weaver-pn-app-wrk2.prod"
-  zone          = "europe-west3-a"
+  zone          = "europe-west6-a"
   image         = "debian-cloud/debian-11"
   providers = {
     google = google

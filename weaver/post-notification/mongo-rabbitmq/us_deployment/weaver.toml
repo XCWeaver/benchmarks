@@ -1,22 +1,22 @@
-["us_deployment/Notifier"]
-rabbitmq_address    = "localhost"
-rabbitmq_port       = "5672"
+["us-deployment/Notifier"]
+rabbitmq_address    = "34.121.3.58"
+rabbitmq_port       = "5673"
 rabbitmq_user    = "admin"
 rabbitmq_password       = "admin"
 
-["us_deployment/Post_storage_america"]
-mongo_address       = "localhost"
+["us-deployment/PostStorageUs"]
+mongo_address       = "34.121.3.58"
 mongo_port          = "27018"
 
 
 [serviceweaver]
-binary = "./us_deployment"
+binary = "./us-deployment"
 
 [single]
-listeners.post_notification = {address = "0.0.0.0:12346"}
+listeners.postnot = {address = "0.0.0.0:12346"}
 
 [multi]
-listeners.post_notification = {address = "0.0.0.0:12346"}
+listeners.postnot = {address = "0.0.0.0:12346"}
 
 [gke]
 regions = ["us-west4"]

@@ -19,3 +19,5 @@ deployment_folder: null
 threads: null
 duration: null
 rate: null
+host_eu: null
+host_us: null

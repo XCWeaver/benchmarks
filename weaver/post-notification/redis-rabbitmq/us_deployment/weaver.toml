@@ -1,23 +1,23 @@
-["us_deployment/Notifier"]
-rabbitmq_address    = "localhost"
+["us-deployment/Notifier"]
+rabbitmq_address    = "35.239.225.192"
 rabbitmq_port       = "5673"
 rabbitmq_user    = "admin"
 rabbitmq_password       = "admin"
 
-["us_deployment/Post_storage_america"]
-redis_address       = "localhost"
-redis_port          = "6380"
+["us-deployment/PostStorageUs"]
+redis_address       = "35.239.225.192"
+redis_port          = "6381"
 redis_password          = ""
 
 
 [serviceweaver]
-binary = "./us_deployment"
+binary = "./us-deployment"
 
 [single]
-listeners.post_notification = {address = "0.0.0.0:12346"}
+listeners.postnot = {address = "0.0.0.0:12346"}
 
 [multi]
-listeners.post_notification = {address = "0.0.0.0:12346"}
+listeners.postnot = {address = "0.0.0.0:12346"}
 
 [gke]
 regions = ["us-west4"]

@@ -19,7 +19,7 @@ func init() {
 		Name:      "github.com/ServiceWeaver/weaver/Main",
 		Iface:     reflect.TypeOf((*weaver.Main)(nil)).Elem(),
 		Impl:      reflect.TypeOf(app{}),
-		Listeners: []string{"post_notification"},
+		Listeners: []string{"postnot"},
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
 			return main_local_stub{impl: impl.(weaver.Main), tracer: tracer}
 		},
@@ -30,17 +30,17 @@ func init() {
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
 			return main_reflect_stub{caller: caller}
 		},
-		RefData: "⟦655fa154:wEaVeReDgE:github.com/ServiceWeaver/weaver/Main→eu_deployment/Post_upload⟧\n⟦023d4964:wEaVeRlIsTeNeRs:github.com/ServiceWeaver/weaver/Main→post_notification⟧\n",
+		RefData: "⟦b46aee84:wEaVeReDgE:github.com/ServiceWeaver/weaver/Main→eu-deployment/PostUpload⟧\n⟦e2ff0f0d:wEaVeRlIsTeNeRs:github.com/ServiceWeaver/weaver/Main→postnot⟧\n",
 	})
 	codegen.Register(codegen.Registration{
-		Name:  "eu_deployment/Notifier",
+		Name:  "eu-deployment/Notifier",
 		Iface: reflect.TypeOf((*Notifier)(nil)).Elem(),
 		Impl:  reflect.TypeOf(notifier{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Notifier", Method: "Notify", Remote: false, Generated: true})}
+			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu-deployment/Notifier", Method: "Notify", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return notifier_client_stub{stub: stub, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Notifier", Method: "Notify", Remote: true, Generated: true})}
+			return notifier_client_stub{stub: stub, notifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu-deployment/Notifier", Method: "Notify", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return notifier_server_stub{impl: impl.(Notifier), addLoad: addLoad}
@@ -51,54 +51,54 @@ func init() {
 		RefData: "",
 	})
 	codegen.Register(codegen.Registration{
-		Name:  "eu_deployment/Post_storage_europe",
-		Iface: reflect.TypeOf((*Post_storage_europe)(nil)).Elem(),
-		Impl:  reflect.TypeOf(post_storage_europe{}),
+		Name:  "eu-deployment/PostStorageEu",
+		Iface: reflect.TypeOf((*PostStorageEu)(nil)).Elem(),
+		Impl:  reflect.TypeOf(postStorageEu{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return post_storage_europe_local_stub{impl: impl.(Post_storage_europe), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_storage_europe", Method: "Post", Remote: false, Generated: true})}
+			return postStorageEu_local_stub{impl: impl.(PostStorageEu), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu-deployment/PostStorageEu", Method: "Post", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return post_storage_europe_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_storage_europe", Method: "Post", Remote: true, Generated: true})}
+			return postStorageEu_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu-deployment/PostStorageEu", Method: "Post", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
-			return post_storage_europe_server_stub{impl: impl.(Post_storage_europe), addLoad: addLoad}
+			return postStorageEu_server_stub{impl: impl.(PostStorageEu), addLoad: addLoad}
 		},
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
-			return post_storage_europe_reflect_stub{caller: caller}
+			return postStorageEu_reflect_stub{caller: caller}
 		},
 		RefData: "",
 	})
 	codegen.Register(codegen.Registration{
-		Name:  "eu_deployment/Post_upload",
-		Iface: reflect.TypeOf((*Post_upload)(nil)).Elem(),
-		Impl:  reflect.TypeOf(post_upload{}),
+		Name:  "eu-deployment/PostUpload",
+		Iface: reflect.TypeOf((*PostUpload)(nil)).Elem(),
+		Impl:  reflect.TypeOf(postUpload{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return post_upload_local_stub{impl: impl.(Post_upload), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_upload", Method: "Post", Remote: false, Generated: true})}
+			return postUpload_local_stub{impl: impl.(PostUpload), tracer: tracer, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu-deployment/PostUpload", Method: "Post", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return post_upload_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu_deployment/Post_upload", Method: "Post", Remote: true, Generated: true})}
+			return postUpload_client_stub{stub: stub, postMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "eu-deployment/PostUpload", Method: "Post", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
-			return post_upload_server_stub{impl: impl.(Post_upload), addLoad: addLoad}
+			return postUpload_server_stub{impl: impl.(PostUpload), addLoad: addLoad}
 		},
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
-			return post_upload_reflect_stub{caller: caller}
+			return postUpload_reflect_stub{caller: caller}
 		},
-		RefData: "⟦2fdeb425:wEaVeReDgE:eu_deployment/Post_upload→eu_deployment/Post_storage_europe⟧\n⟦a7065768:wEaVeReDgE:eu_deployment/Post_upload→eu_deployment/Notifier⟧\n",
+		RefData: "⟦9a81e5ee:wEaVeReDgE:eu-deployment/PostUpload→eu-deployment/PostStorageEu⟧\n⟦d55efb8f:wEaVeReDgE:eu-deployment/PostUpload→eu-deployment/Notifier⟧\n",
 	})
 }
 
 // weaver.InstanceOf checks.
 var _ weaver.InstanceOf[weaver.Main] = (*app)(nil)
 var _ weaver.InstanceOf[Notifier] = (*notifier)(nil)
-var _ weaver.InstanceOf[Post_storage_europe] = (*post_storage_europe)(nil)
-var _ weaver.InstanceOf[Post_upload] = (*post_upload)(nil)
+var _ weaver.InstanceOf[PostStorageEu] = (*postStorageEu)(nil)
+var _ weaver.InstanceOf[PostUpload] = (*postUpload)(nil)
 
 // weaver.Router checks.
 var _ weaver.Unrouted = (*app)(nil)
 var _ weaver.Unrouted = (*notifier)(nil)
-var _ weaver.Unrouted = (*post_storage_europe)(nil)
-var _ weaver.Unrouted = (*post_upload)(nil)
+var _ weaver.Unrouted = (*postStorageEu)(nil)
+var _ weaver.Unrouted = (*postUpload)(nil)
 
 // Local stub implementations.
 
@@ -139,23 +139,23 @@ func (s notifier_local_stub) Notify(ctx context.Context, a0 Post_id_obj, a1 int)
 	return s.impl.Notify(ctx, a0, a1)
 }
 
-type post_storage_europe_local_stub struct {
-	impl        Post_storage_europe
+type postStorageEu_local_stub struct {
+	impl        PostStorageEu
 	tracer      trace.Tracer
 	postMetrics *codegen.MethodMetrics
 }
 
-// Check that post_storage_europe_local_stub implements the Post_storage_europe interface.
-var _ Post_storage_europe = (*post_storage_europe_local_stub)(nil)
+// Check that postStorageEu_local_stub implements the PostStorageEu interface.
+var _ PostStorageEu = (*postStorageEu_local_stub)(nil)
 
-func (s post_storage_europe_local_stub) Post(ctx context.Context, a0 string) (r0 Post_id_obj, err error) {
+func (s postStorageEu_local_stub) Post(ctx context.Context, a0 string) (r0 Post_id_obj, err error) {
 	// Update metrics.
 	begin := s.postMetrics.Begin()
 	defer func() { s.postMetrics.End(begin, err != nil, 0, 0) }()
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "main.Post_storage_europe.Post", trace.WithSpanKind(trace.SpanKindInternal))
+		ctx, span = s.tracer.Start(ctx, "main.PostStorageEu.Post", trace.WithSpanKind(trace.SpanKindInternal))
 		defer func() {
 			if err != nil {
 				span.RecordError(err)
@@ -168,23 +168,23 @@ func (s post_storage_europe_local_stub) Post(ctx context.Context, a0 string) (r0
 	return s.impl.Post(ctx, a0)
 }
 
-type post_upload_local_stub struct {
-	impl        Post_upload
+type postUpload_local_stub struct {
+	impl        PostUpload
 	tracer      trace.Tracer
 	postMetrics *codegen.MethodMetrics
 }
 
-// Check that post_upload_local_stub implements the Post_upload interface.
-var _ Post_upload = (*post_upload_local_stub)(nil)
+// Check that postUpload_local_stub implements the PostUpload interface.
+var _ PostUpload = (*postUpload_local_stub)(nil)
 
-func (s post_upload_local_stub) Post(ctx context.Context, a0 string, a1 int) (err error) {
+func (s postUpload_local_stub) Post(ctx context.Context, a0 string, a1 int) (r0 string, err error) {
 	// Update metrics.
 	begin := s.postMetrics.Begin()
 	defer func() { s.postMetrics.End(begin, err != nil, 0, 0) }()
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "main.Post_upload.Post", trace.WithSpanKind(trace.SpanKindInternal))
+		ctx, span = s.tracer.Start(ctx, "main.PostUpload.Post", trace.WithSpanKind(trace.SpanKindInternal))
 		defer func() {
 			if err != nil {
 				span.RecordError(err)
@@ -245,7 +245,7 @@ func (s notifier_client_stub) Notify(ctx context.Context, a0 Post_id_obj, a1 int
 
 	// Preallocate a buffer of the right size.
 	size := 0
-	size += serviceweaver_size_Post_id_obj_c8baf7db(&a0)
+	size += serviceweaver_size_Post_id_obj_abd36697(&a0)
 	size += 8
 	enc := codegen.NewEncoder()
 	enc.Reset(size)
@@ -271,15 +271,15 @@ func (s notifier_client_stub) Notify(ctx context.Context, a0 Post_id_obj, a1 int
 	return
 }
 
-type post_storage_europe_client_stub struct {
+type postStorageEu_client_stub struct {
 	stub        codegen.Stub
 	postMetrics *codegen.MethodMetrics
 }
 
-// Check that post_storage_europe_client_stub implements the Post_storage_europe interface.
-var _ Post_storage_europe = (*post_storage_europe_client_stub)(nil)
+// Check that postStorageEu_client_stub implements the PostStorageEu interface.
+var _ PostStorageEu = (*postStorageEu_client_stub)(nil)
 
-func (s post_storage_europe_client_stub) Post(ctx context.Context, a0 string) (r0 Post_id_obj, err error) {
+func (s postStorageEu_client_stub) Post(ctx context.Context, a0 string) (r0 Post_id_obj, err error) {
 	// Update metrics.
 	var requestBytes, replyBytes int
 	begin := s.postMetrics.Begin()
@@ -288,7 +288,7 @@ func (s post_storage_europe_client_stub) Post(ctx context.Context, a0 string) (r
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "main.Post_storage_europe.Post", trace.WithSpanKind(trace.SpanKindClient))
+		ctx, span = s.stub.Tracer().Start(ctx, "main.PostStorageEu.Post", trace.WithSpanKind(trace.SpanKindClient))
 	}
 
 	defer func() {
@@ -335,15 +335,15 @@ func (s post_storage_europe_client_stub) Post(ctx context.Context, a0 string) (r
 	return
 }
 
-type post_upload_client_stub struct {
+type postUpload_client_stub struct {
 	stub        codegen.Stub
 	postMetrics *codegen.MethodMetrics
 }
 
-// Check that post_upload_client_stub implements the Post_upload interface.
-var _ Post_upload = (*post_upload_client_stub)(nil)
+// Check that postUpload_client_stub implements the PostUpload interface.
+var _ PostUpload = (*postUpload_client_stub)(nil)
 
-func (s post_upload_client_stub) Post(ctx context.Context, a0 string, a1 int) (err error) {
+func (s postUpload_client_stub) Post(ctx context.Context, a0 string, a1 int) (r0 string, err error) {
 	// Update metrics.
 	var requestBytes, replyBytes int
 	begin := s.postMetrics.Begin()
@@ -352,7 +352,7 @@ func (s post_upload_client_stub) Post(ctx context.Context, a0 string, a1 int) (e
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "main.Post_upload.Post", trace.WithSpanKind(trace.SpanKindClient))
+		ctx, span = s.stub.Tracer().Start(ctx, "main.PostUpload.Post", trace.WithSpanKind(trace.SpanKindClient))
 	}
 
 	defer func() {
@@ -396,6 +396,7 @@ func (s post_upload_client_stub) Post(ctx context.Context, a0 string, a1 int) (e
 
 	// Decode the results.
 	dec := codegen.NewDecoder(results)
+	r0 = dec.String()
 	err = dec.Error()
 	return
 }
@@ -485,16 +486,16 @@ func (s notifier_server_stub) notify(ctx context.Context, args []byte) (res []by
 	return enc.Data(), nil
 }
 
-type post_storage_europe_server_stub struct {
-	impl    Post_storage_europe
+type postStorageEu_server_stub struct {
+	impl    PostStorageEu
 	addLoad func(key uint64, load float64)
 }
 
-// Check that post_storage_europe_server_stub implements the codegen.Server interface.
-var _ codegen.Server = (*post_storage_europe_server_stub)(nil)
+// Check that postStorageEu_server_stub implements the codegen.Server interface.
+var _ codegen.Server = (*postStorageEu_server_stub)(nil)
 
 // GetStubFn implements the codegen.Server interface.
-func (s post_storage_europe_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
+func (s postStorageEu_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
 	switch method {
 	case "Post":
 		return s.post
@@ -503,7 +504,7 @@ func (s post_storage_europe_server_stub) GetStubFn(method string) func(ctx conte
 	}
 }
 
-func (s post_storage_europe_server_stub) post(ctx context.Context, args []byte) (res []byte, err error) {
+func (s postStorageEu_server_stub) post(ctx context.Context, args []byte) (res []byte, err error) {
 	// Catch and return any panics detected during encoding/decoding/rpc.
 	defer func() {
 		if err == nil {
@@ -528,16 +529,16 @@ func (s post_storage_europe_server_stub) post(ctx context.Context, args []byte) 
 	return enc.Data(), nil
 }
 
-type post_upload_server_stub struct {
-	impl    Post_upload
+type postUpload_server_stub struct {
+	impl    PostUpload
 	addLoad func(key uint64, load float64)
 }
 
-// Check that post_upload_server_stub implements the codegen.Server interface.
-var _ codegen.Server = (*post_upload_server_stub)(nil)
+// Check that postUpload_server_stub implements the codegen.Server interface.
+var _ codegen.Server = (*postUpload_server_stub)(nil)
 
 // GetStubFn implements the codegen.Server interface.
-func (s post_upload_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
+func (s postUpload_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
 	switch method {
 	case "Post":
 		return s.post
@@ -546,7 +547,7 @@ func (s post_upload_server_stub) GetStubFn(method string) func(ctx context.Conte
 	}
 }
 
-func (s post_upload_server_stub) post(ctx context.Context, args []byte) (res []byte, err error) {
+func (s postUpload_server_stub) post(ctx context.Context, args []byte) (res []byte, err error) {
 	// Catch and return any panics detected during encoding/decoding/rpc.
 	defer func() {
 		if err == nil {
@@ -564,10 +565,11 @@ func (s post_upload_server_stub) post(ctx context.Context, args []byte) (res []b
 	// TODO(rgrandl): The deferred function above will recover from panics in the
 	// user code: fix this.
 	// Call the local method.
-	appErr := s.impl.Post(ctx, a0, a1)
+	r0, appErr := s.impl.Post(ctx, a0, a1)
 
 	// Encode the results.
 	enc := codegen.NewEncoder()
+	enc.String(r0)
 	enc.Error(appErr)
 	return enc.Data(), nil
 }
@@ -593,27 +595,27 @@ func (s notifier_reflect_stub) Notify(ctx context.Context, a0 Post_id_obj, a1 in
 	return
 }
 
-type post_storage_europe_reflect_stub struct {
+type postStorageEu_reflect_stub struct {
 	caller func(string, context.Context, []any, []any) error
 }
 
-// Check that post_storage_europe_reflect_stub implements the Post_storage_europe interface.
-var _ Post_storage_europe = (*post_storage_europe_reflect_stub)(nil)
+// Check that postStorageEu_reflect_stub implements the PostStorageEu interface.
+var _ PostStorageEu = (*postStorageEu_reflect_stub)(nil)
 
-func (s post_storage_europe_reflect_stub) Post(ctx context.Context, a0 string) (r0 Post_id_obj, err error) {
+func (s postStorageEu_reflect_stub) Post(ctx context.Context, a0 string) (r0 Post_id_obj, err error) {
 	err = s.caller("Post", ctx, []any{a0}, []any{&r0})
 	return
 }
 
-type post_upload_reflect_stub struct {
+type postUpload_reflect_stub struct {
 	caller func(string, context.Context, []any, []any) error
 }
 
-// Check that post_upload_reflect_stub implements the Post_upload interface.
-var _ Post_upload = (*post_upload_reflect_stub)(nil)
+// Check that postUpload_reflect_stub implements the PostUpload interface.
+var _ PostUpload = (*postUpload_reflect_stub)(nil)
 
-func (s post_upload_reflect_stub) Post(ctx context.Context, a0 string, a1 int) (err error) {
-	err = s.caller("Post", ctx, []any{a0, a1}, []any{})
+func (s postUpload_reflect_stub) Post(ctx context.Context, a0 string, a1 int) (r0 string, err error) {
+	err = s.caller("Post", ctx, []any{a0, a1}, []any{&r0})
 	return
 }
 
@@ -647,9 +649,9 @@ func (x *Post_id_obj) WeaverUnmarshal(dec *codegen.Decoder) {
 
 // Size implementations.
 
-// serviceweaver_size_Post_id_obj_c8baf7db returns the size (in bytes) of the serialization
+// serviceweaver_size_Post_id_obj_abd36697 returns the size (in bytes) of the serialization
 // of the provided type.
-func serviceweaver_size_Post_id_obj_c8baf7db(x *Post_id_obj) int {
+func serviceweaver_size_Post_id_obj_abd36697(x *Post_id_obj) int {
 	size := 0
 	size += 0
 	size += (4 + len(x.PostId))

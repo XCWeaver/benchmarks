@@ -1,24 +1,24 @@
-["eu_deployment/Notifier"]
-rabbitmq_address    = "localhost"
+["eu-deployment/Notifier"]
+rabbitmq_address    = "34.65.41.16"
 rabbitmq_port       = "5672"
 rabbitmq_user    = "admin"
 rabbitmq_password       = "admin"
 
-["eu_deployment/Post_storage_europe"]
-mongo_address       = "localhost"
+["eu-deployment/PostStorageEu"]
+mongo_address       = "34.65.41.16"
 mongo_port          = "27017"
 
 
 [serviceweaver]
-binary = "./eu_deployment"
+binary = "./eu-deployment"
 
 [single]
-listeners.post_notification = {address = "0.0.0.0:12345"}
+listeners.postnot = {address = "0.0.0.0:12345"}
 
 [multi]
-listeners.post_notification = {address = "0.0.0.0:12345"}
+listeners.postnot = {address = "0.0.0.0:12345"}
 
 
 [gke]
 regions = ["europe-west6"]
-listeners.post_notification = {public_hostname = "hello.com"}
+listeners.postnot = {public_hostname = "hello.com"}

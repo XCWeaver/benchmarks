@@ -3,13 +3,13 @@ import argparse
 import datetime
 import json
 import os
+import shutil
 import socket
 import statistics
 import sys
 import threading
 import time
 from plumbum import FG
-import toml
 from tqdm import tqdm
 import requests
 import random
@@ -51,17 +51,15 @@ GCP_REDIS                       = None
 # same as in terraform
 APP_FOLDER_NAME           = "post-notification"
 GCP_INSTANCE_APP_WRK2     = "weaver-pn-app-wrk2"
-GCP_INSTANCE_APP_EU       = "weaver-pn-app-eu"
-GCP_INSTANCE_APP_US       = "weaver-pn-app-us"
 GCP_INSTANCE_DB_MANAGER   = "weaver-pn-db-manager"
 GCP_INSTANCE_DB_EU        = "weaver-pn-db-eu"
 GCP_INSTANCE_DB_US        = "weaver-pn-db-us"
 GCP_MEMORY_STORAGE_EU = "memorystore-primary"
 GCP_MEMORY_STORAGE_US = "memorystore-standby"
-GCP_ZONE_MANAGER          = "europe-west3-a"
-GCP_ZONE_EU               = "europe-west3-a"
+GCP_ZONE_MANAGER          = "europe-west6-a"
+GCP_ZONE_EU               = "europe-west6-a"
 GCP_ZONE_US               = "us-central1-a"
-GCP_REGION_EU               = "europe-west3"
+GCP_REGION_EU               = "europe-west6"
 GCP_REGION_US               = "us-central1"
 
 # --------------------
@@ -206,36 +204,6 @@ def metrics(deployment, timestamp):
   print(yaml.dump(results, default_flow_style=False))
   print(f"[INFO] evaluation results saved at {filepath}")
 
-def merge_metrics_gcp(timestamp):
-  filepatheu = f"evaluation/gcp/{timestamp}/metrics-eu.yml"
-  filepathus = f"evaluation/gcp/{timestamp}/metrics-us.yml"
-
-  with open(filepatheu, 'r') as outfile_eu, open(filepathus, 'r') as outfile_us:
-    metrics_eu = yaml.safe_load(outfile_eu)
-    metrics_us = yaml.safe_load(outfile_us)
-
-  merged_data = {**metrics_eu, **metrics_us}
-
-  requests = merged_data['num_requests']
-  notifications_received = merged_data['num_notifications_received']
-  notifications_sent = merged_data['num_notifications_sent']
-  inconsistencies = merged_data['num_inconsistencies']
-
-  per_notifications_received = "{:.2f}".format((notifications_received / notifications_sent) * 100)
-  per_inconsistencies ="{:.2f}".format((inconsistencies / requests) * 100)
-
-  percentages = {
-    'per_notifications_received': float(per_notifications_received),
-    'per_inconsistencies': float(per_inconsistencies),
-  }
-
-  # Add percentages to metrics
-  merged_data.update(percentages)
-  
-  filepathfinal = f"evaluation/gcp/{timestamp}/metrics.yml"
-  with open(filepathfinal, 'w') as out_file:
-      yaml.safe_dump(merged_data, out_file)
-
 def run_workload(duration, url, rate, throughputs, latencies_results, index):
 
   start_time = time.time()
@@ -281,124 +249,7 @@ def run_workload(duration, url, rate, throughputs, latencies_results, index):
   throughputs[index] = throughput
   latencies_results[index] = latencies
 
-def gen_envoy_file_gcp():
-  host_ms_eu = get_redis_instance_host(GCP_MEMORY_STORAGE_EU, GCP_REGION_EU)
-  host_ms_us = get_redis_instance_host(GCP_MEMORY_STORAGE_US, GCP_REGION_US)
-
-  with open("deploy/memorystorage/envoy.yaml", 'r') as file:
-    content = file.read()
-
-  content = content.replace('{{ host_eu }}', host_ms_eu)
-  content = content.replace('{{ host_us }}', host_ms_us)
-
-  with open("deploy/tmp/envoy.yaml", 'w') as file:
-    yaml.dump(content, file)
-
-  print(f"[INFO] generated envoy.yaml at deploy/tmp/envoy.yaml")
-
-def gen_weaver_config_mongo_gcp():
-  host_eu = get_instance_host(GCP_INSTANCE_DB_EU, GCP_ZONE_EU)
-  host_us = get_instance_host(GCP_INSTANCE_DB_US, GCP_ZONE_US)
-
-  weaver_config_path = f"{BASE_DIR}/deploy/tmp/mongo-rabbitmq"
-  os.makedirs(weaver_config_path, exist_ok=True)
-
-  data = toml.load("deploy/weaver/mongo-rabbitmq/weaver-template-eu.toml")
-
-  # europe
-  for _, config in data.items():
-    if 'mongo_address' in config:
-      config['mongo_address'] = host_eu
-    if 'rabbitmq_address' in config:
-      config['rabbitmq_address'] = host_eu
-  filepath_eu = "deploy/tmp/mongo-rabbitmq/weaver-gcp-eu.toml"
-  f = open(filepath_eu,'w')
-  toml.dump(data, f)
-  f.close()
-
-  # us
-  data = toml.load("deploy/weaver/mongo-rabbitmq/weaver-template-us.toml")
-  for _, config in data.items():
-    if 'mongo_address' in config:
-      config['mongo_address'] = host_us
-    if 'rabbitmq_address' in config:
-      config['rabbitmq_address'] = host_us
-  filepath_us = "deploy/tmp/mongo-rabbitmq/weaver-gcp-us.toml"
-  f = open(filepath_us,'w')
-  toml.dump(data, f)
-  f.close()
-
-  print(f"[INFO] generated app config for GCP at {filepath_eu} and {filepath_us}")
-
-def gen_weaver_config_redis_gcp():
-  host_eu = get_instance_host(GCP_INSTANCE_DB_EU, GCP_ZONE_EU)
-  host_us = get_instance_host(GCP_INSTANCE_DB_US, GCP_ZONE_US)
-
-  weaver_config_path = f"{BASE_DIR}/deploy/tmp/redis-rabbitmq"
-  os.makedirs(weaver_config_path, exist_ok=True)
-
-  data = toml.load("deploy/weaver/redis-rabbitmq/weaver-template-eu.toml")
-
-  # europe
-  for _, config in data.items():
-    if 'redis_address' in config:
-      config['redis_address'] = host_eu
-    if 'rabbitmq_address' in config:
-      config['rabbitmq_address'] = host_eu
-  filepath_eu = "deploy/tmp/redis-rabbitmq/weaver-gcp-eu.toml"
-  f = open(filepath_eu,'w')
-  toml.dump(data, f)
-  f.close()
-
-  # us
-  data = toml.load("deploy/weaver/redis-rabbitmq/weaver-template-us.toml")
-  for _, config in data.items():
-    if 'redis_address' in config:
-      config['redis_address'] = host_us
-    if 'rabbitmq_address' in config:
-      config['rabbitmq_address'] = host_us
-  filepath_us = "deploy/tmp/redis-rabbitmq/weaver-gcp-us.toml"
-  f = open(filepath_us,'w')
-  toml.dump(data, f)
-  f.close()
-
-  print(f"[INFO] generated app config for GCP at {filepath_eu} and {filepath_us}")
-
-def gen_weaver_config_mysql_gcp():
-  host_eu = get_instance_host(GCP_INSTANCE_DB_EU, GCP_ZONE_EU)
-  host_us = get_instance_host(GCP_INSTANCE_DB_US, GCP_ZONE_US)
-
-  weaver_config_path = f"{BASE_DIR}/deploy/tmp/mysql-rabbitmq"
-  os.makedirs(weaver_config_path, exist_ok=True)
-
-  data = toml.load("deploy/weaver/mysql-rabbitmq/weaver-template-eu.toml")
-
-  # europe
-  for _, config in data.items():
-    if 'mysql_address' in config:
-      config['mysql_address'] = host_eu
-    if 'rabbitmq_address' in config:
-      config['rabbitmq_address'] = host_eu
-  filepath_eu = "deploy/tmp/mysql-rabbitmq/weaver-gcp-eu.toml"
-  f = open(filepath_eu,'w')
-  toml.dump(data, f)
-  f.close()
-
-  # us
-  data = toml.load("deploy/weaver/mysql-rabbitmq/weaver-template-us.toml")
-  for _, config in data.items():
-    if 'mysql_address' in config:
-      config['mysql_address'] = host_us
-    if 'rabbitmq_address' in config:
-      config['rabbitmq_address'] = host_us
-  filepath_us = "deploy/tmp/mysql-rabbitmq/weaver-gcp-us.toml"
-  f = open(filepath_us,'w')
-  toml.dump(data, f)
-  f.close()
-
-  print(f"[INFO] generated app config for GCP at {filepath_eu} and {filepath_us}")
-
-def gen_ansible_vars(workload_timestamp=None, deployment_type=None, deployment_folder=None, duration=None, threads=None, rate=None):
+def gen_ansible_vars(workload_timestamp=None, deployment_type=None, deployment_folder=None, duration=None, threads=None, rate=None, host_eu=None, host_us=None):
   import yaml
 
   with open('deploy/ansible/templates/vars.yml', 'r') as file:
@@ -411,6 +262,8 @@ def gen_ansible_vars(workload_timestamp=None, deployment_type=None, deployment_f
   data['duration'] = duration if duration else None
   data['threads'] = threads if threads else None
   data['rate'] = rate if rate else None
+  data['host_eu'] = host_eu if host_eu else None
+  data['host_us'] = host_us if host_us else None
 
   with open('deploy/tmp/ansible-vars.yml', 'w') as file:
     yaml.dump(data, file)
@@ -426,8 +279,6 @@ def gen_ansible_inventory_gcp():
     'host_db_eu':       get_instance_host(GCP_INSTANCE_DB_EU, GCP_ZONE_EU),
     'host_db_us':       get_instance_host(GCP_INSTANCE_DB_US, GCP_ZONE_US),
     'host_app_wrk2':    get_instance_host(GCP_INSTANCE_APP_WRK2, GCP_ZONE_MANAGER),
-    'host_app_eu':      get_instance_host(GCP_INSTANCE_APP_EU, GCP_ZONE_EU),
-    'host_app_us':      get_instance_host(GCP_INSTANCE_APP_US, GCP_ZONE_US),
   })
 
   filename = "deploy/tmp/ansible-inventory.cfg"
@@ -471,14 +322,14 @@ def gcp_configure():
   try:
     print("[INFO] configuring firewalls")
     # weaver-pn-socialnetwork:
-    # tcp ports: 12345
+    # tcp ports: 12345, 80
     # weaver-pn-storage:
     # tcp ports: 6379,6380,27017,27018,3307,3308,15672,5672,15673,5673
     # weaver-pn-swarm:
     # tcp ports: 2376,2377,7946
     # udp ports: 4789,7946
     firewalls = {
-      'weaver-pn-socialnetwork': 'tcp:12345',
+      'weaver-pn-socialnetwork': 'tcp:12345,tcp:80',
       'weaver-pn-storage': 'tcp:6379,tcp:6380,tcp:27017,tcp:27018,tcp:3307,tcp:3308,tcp:15672,tcp:5672,tcp:15673,tcp:5673',
       'weaver-pn-swarm': 'tcp:2376,tcp:2377,tcp:7946,udp:4789,udp:7946'
     }
@@ -512,11 +363,6 @@ def gcp_deploy():
   print(f"[INFO] created deploy/tmp/ directory")
 
   gen_ansible_config()
-
-  # generate weaver config with hosts of datastores in gcp machines
-  gen_weaver_config_mongo_gcp()
-  gen_weaver_config_mysql_gcp()
-  gen_weaver_config_redis_gcp()
   # generate ansible inventory with hosts of all gcp machines
   gen_ansible_inventory_gcp()
   # generate ansible inventory with extra variables for current deployment
@@ -536,12 +382,10 @@ def gcp_info():
   print(f"storage in {GCP_ZONE_US} running @", get_instance_host(GCP_INSTANCE_DB_US, GCP_ZONE_US))
   print("\n--- SERVICES ---")
   print(f"wrk2 in {GCP_ZONE_MANAGER} running @", get_instance_host(GCP_INSTANCE_APP_WRK2, GCP_ZONE_MANAGER))
-  print(f"services in {GCP_ZONE_EU} running @", get_instance_host(GCP_INSTANCE_APP_EU, GCP_ZONE_EU))
-  print(f"services in {GCP_ZONE_US} running @\n\n", get_instance_host(GCP_INSTANCE_APP_US, GCP_ZONE_US))
 
 def gcp_start_datastores():
   from plumbum.cmd import ansible_playbook, gcloud
-  gcloud["redis", "instances", "create", "memorystore-primary", "--size=1", "--region=europe-west3", "--tier=STANDARD", "--async"] & FG
+  gcloud["redis", "instances", "create", "memorystore-primary", "--size=1", "--region=europe-west6", "--tier=STANDARD", "--async"] & FG
   gcloud["redis", "instances", "create", "memorystore-standby", "--size=1", "--region=us-central1", "--tier=STANDARD"] & FG
   ansible_playbook["deploy/ansible/playbooks/start-datastores.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
   display_progress_bar(30, "waiting for datastores to initialize")
@@ -553,55 +397,28 @@ def gcp_redis_hosts():
   print(f"memorystore primary host: {host_eu}")
   print(f"memorystore secundary host: {host_us}")
 
+def gcp_update_envoy_file():
+  from plumbum.cmd import ansible_playbook
+  source = "deploy/memorystorage/envoy.yaml"
+  destination = "deploy/tmp/"
+  # Copy envoy file to tmp directory
+  shutil.copy(source, destination)
+  ansible_playbook["deploy/ansible/playbooks/update_envoy_file.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
+
 def gcp_replicate_datastores():
   from plumbum.cmd import ansible_playbook
   ansible_playbook["deploy/ansible/playbooks/replicate-databases.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
   display_progress_bar(30, "waiting for replication process to be complete")
 
-def gcp_update_envoy_file():
-  from plumbum.cmd import ansible_playbook
-  ansible_playbook["deploy/ansible/playbooks/update_envoy_file.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-  
-def gcp_start_app_redis():
-  from plumbum.cmd import ansible_playbook
-  gen_ansible_vars(deployment_folder=REDIS_DIR)
-  ansible_playbook["deploy/ansible/playbooks/start-app.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-
-def gcp_start_app_mongo():
-  from plumbum.cmd import ansible_playbook
-  gen_ansible_vars(deployment_folder=MONGO_DIR)
-  ansible_playbook["deploy/ansible/playbooks/start-app.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-
-def gcp_start_app_mysql():
-  from plumbum.cmd import ansible_playbook
-  gen_ansible_vars(deployment_folder=MYSQL_DIR)
-  ansible_playbook["deploy/ansible/playbooks/start-app.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-
-def gcp_stop_app():
-  from plumbum.cmd import ansible_playbook
-  ansible_playbook["deploy/ansible/playbooks/stop-app.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-
 def gcp_stop_datastores():
   from plumbum.cmd import ansible_playbook, gcloud
-  gcloud["redis", "instances", "delete", "memorystore-primary", "--region=europe-west3"] & FG
+  gcloud["redis", "instances", "delete", "memorystore-primary", "--region=europe-west6"] & FG
   gcloud["redis", "instances", "delete", "memorystore-standby", "--region=us-central1"] & FG
   ansible_playbook["deploy/ansible/playbooks/stop-datastores.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
 
 def gcp_restart_datastores():
   gcp_stop_datastores()
   gcp_start_datastores()
-
-def gcp_restart_app_redis():
-  gcp_stop_app()
-  gcp_start_app_redis()
-
-def gcp_restart_app_mongo():
-  gcp_stop_app()
-  gcp_start_app_mongo()
-
-def gcp_restart_app_mysql():
-  gcp_stop_app()
-  gcp_start_app_mysql()
   
 def gcp_clean():
   from plumbum.cmd import terraform
@@ -613,26 +430,17 @@ def gcp_clean():
     print(f"[INFO] removed {BASE_DIR}/deploy/tmp/ directory")
  
 def gcp_metrics(timestamp):
-  from plumbum.cmd import ansible_playbook
-  if timestamp== None:
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-  gen_ansible_vars(timestamp, 'gcp')
-  metrics_path = f"{BASE_DIR}/evaluation/gcp/{timestamp}"
-  os.makedirs(metrics_path, exist_ok=True)
-  ansible_playbook["deploy/ansible/playbooks/gather-metrics.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-  merge_metrics_gcp(timestamp)
-  print(f"[INFO] metrics results saved at evaluation/gcp/{timestamp}/ in metrics.yaml")
+  print(f"[INFO] metrics automatically generated at evaluation/gcp after running wrk2")
 
-def gcp_wrk2_vm(duration, threads, rate, timestamp):
+def gcp_wrk2_vm(duration, threads, rate, timestamp, host_eu, host_us):
   threads_list = []
-  host_eu = get_instance_host(GCP_INSTANCE_APP_EU, GCP_ZONE_EU)
   throughputs = []
   latencies = []
   for i in range(int(threads)):
     throughputs.append(0)
     latencies.append([])
   for i in range(int(threads)):
-    thread = threading.Thread(target=run_workload, args=(duration, f"http://{host_eu}:{APP_PORT}/post_notification", int(int(rate) / int(threads)), throughputs, latencies, i))
+    thread = threading.Thread(target=run_workload, args=(duration, f"http://{host_eu}/post_notification", int(int(rate) / int(threads)), throughputs, latencies, i))
     thread.start()
     threads_list.append(thread)
 
@@ -656,63 +464,65 @@ def gcp_wrk2_vm(duration, threads, rate, timestamp):
   output = io.BytesIO()
   histogram.dump(histoblob, output)
   median = histogram.get_value_at_percentile(50.0)
+  consistencyWindow = gcp_consistency_window(host_us)
+  inconsistencies = gcp_inconsistencies(host_us)
   filepath = f"evaluation/gcp/{timestamp}/workload.out"
   os.makedirs(os.path.dirname(filepath), exist_ok=True)
   with open(filepath, "w") as f:
-    f.write(output.getvalue().decode() + throughput_str +  f" Latency Median:     {median}\n")
+    f.write(output.getvalue().decode() + throughput_str +  f" Latency Median:     {median}\n Consistency Window:     {consistencyWindow}\n Inconsistencies:     {inconsistencies}\n")
 
-  print(output.getvalue().decode() + throughput_str + f" Latency Median:     {median}\n")
+  print(output.getvalue().decode() + throughput_str + f" Latency Median:     {median}\n Consistency Window:     {consistencyWindow}\n Inconsistencies:     {inconsistencies}\n")
   print(f"[INFO] workload results saved at {filepath}")
 
-  
-
-def gcp_consistency_window():
-  host = get_instance_host(GCP_INSTANCE_APP_US, GCP_ZONE_US)
-  url = f'http://{host}:{APP_PORT}/consistency_window'
+def gcp_consistency_window(host):
+  url = f'http://{host}/consistency_window'
   response = requests.get(url)
 
-  # Check if the request was successful
   if response.status_code == 200:
-      # Parse the JSON response
-      data = json.loads(response.text)
-      response = requests.get(url)
-      if response.status_code == 200:
-        data2 = json.loads(response.text)
-        while data2 == data:
-          response = requests.get(url)
-          if response.status_code == 200:
-            data2 = json.loads(response.text)
-      if data == None:
-        values = data2
-      elif data2 == None:
-        values = data
-      else:
-        values = data + data2
+      values = json.loads(response.text)
 
       if values == None:
         return None
-      print(values)
-      print(len(values))
-      average = statistics.mean(values)
-      print(f"Average: {average}")
 
       # Calculate the median
       median = statistics.median(values)
       print(f"Median: {median}")
+      return median
   else:
-      print(f"Failed to get data: {response.status_code}")
+      print(f"Failed to get consistency window: {response.status_code}")
 
-def gcp_wrk2(duration, threads, rate):
+def gcp_inconsistencies(host):
+  url = f'http://{host}/inconsistencies'
+  response = requests.get(url)
+
+  if response.status_code == 200:
+      inconsistencies = int(response.text)
+
+      if inconsistencies == None:
+        return None
+      
+      return inconsistencies
+  else:
+      print(f"Failed to get inconsistencies: {response.status_code}")
+
+def gcp_wrk2(duration, threads, rate, host_eu, host_us):
   from plumbum.cmd import ansible_playbook
   timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
   metrics_path = f"{BASE_DIR}/evaluation/gcp/{timestamp}"
   os.makedirs(metrics_path, exist_ok=True)
-  gen_ansible_vars(timestamp, 'gcp', None, duration, threads, rate)
+  gen_ansible_vars(timestamp, 'gcp', None, duration, threads, rate, host_eu, host_us)
   ansible_playbook["deploy/ansible/playbooks/run-wrk2.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-  sleep(3)
-  ansible_playbook["deploy/ansible/playbooks/gather-metrics.yml", "-i", "deploy/tmp/ansible-inventory.cfg", "--extra-vars", "@deploy/tmp/ansible-vars.yml"] & FG
-  merge_metrics_gcp(timestamp)
   print(f"[INFO] metrics results saved at evaluation/gcp/{timestamp}/ in metrics.yaml file")
+
+def gcp_cluster_eu():
+  from plumbum.cmd import gcloud
+  gcloud["beta", "container", "--project", GCP_PROJECT_ID, "clusters", "create-auto", "cluster-post-notification-eu", "--region", "europe-west6", "--release-channel", "regular", "--network", f"projects/{GCP_PROJECT_ID}/global/networks/default", "--subnetwork", f"projects/{GCP_PROJECT_ID}/regions/europe-west6/subnetworks/default", "--cluster-ipv4-cidr", "/17", "--binauthz-evaluation-mode=DISABLED"] & FG
+  gcloud["container", "clusters", "get-credentials", "cluster-post-notification-eu", "--region", "europe-west6", "--project", GCP_PROJECT_ID] & FG
+
+def gcp_cluster_us():
+  from plumbum.cmd import gcloud
+  gcloud["beta", "container", "--project", GCP_PROJECT_ID, "clusters", "create-auto", "cluster-post-notification-us", "--region", "us-central1", "--release-channel", "regular", "--network", f"projects/{GCP_PROJECT_ID}/global/networks/default", "--subnetwork", f"projects/{GCP_PROJECT_ID}/regions/us-central1/subnetworks/default", "--cluster-ipv4-cidr", "/17", "--binauthz-evaluation-mode=DISABLED"] & FG
+  gcloud["container", "clusters", "get-credentials", "cluster-post-notification-us", "--region", "us-central1", "--project", GCP_PROJECT_ID] & FG
 
 def gcp_posts_sizes():
   #host = get_instance_host(GCP_INSTANCE_DB_EU, GCP_ZONE_EU)
@@ -807,7 +617,7 @@ def gcp_posts_sizes():
 # LOCAL
 # --------------------
 
-def local_wrk2(duration, threads, rate):
+def local_wrk2(duration, threads, rate, host_eu, host_us):
   url = "http://localhost:12345/post_notification"
   threads_list = []
   throughputs = []
@@ -816,7 +626,7 @@ def local_wrk2(duration, threads, rate):
     throughputs.append(0)
     latencies.append([])
   for i in range(int(threads)):
-    thread = threading.Thread(target=run_workload, args=(duration, url, int(int(rate) / int(threads), throughputs, latencies, i)))
+    thread = threading.Thread(target=run_workload, args=(duration, url, int(int(rate) / int(threads)), throughputs, latencies, i))
     thread.start()
     threads_list.append(thread)
 
@@ -854,98 +664,6 @@ def local_wrk2(duration, threads, rate):
 
 def local_metrics(timestamp):
   metrics('local', timestamp)
-
-def local_metrics_eu(timestamp):
-  from plumbum.cmd import weaver
-  import re
-
-  if timestamp== None:
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-
-  pattern = re.compile(r'^.*│.*│.*│.*│\s*(\d+\.?\d*)\s*│.*$', re.MULTILINE)
-
-  def get_filter_metrics(metric_name):
-    return weaver['multi', 'metrics', metric_name]()
-
-  # wkr2 api
-  requests_metrics = get_filter_metrics('requests')
-  requests = sum(int(value) for value in pattern.findall(requests_metrics))
-  
-  write_post_duration_metrics = get_filter_metrics('sn_write_post_duration_ms')
-  write_post_duration_metrics_values = pattern.findall(write_post_duration_metrics)
-  print(write_post_duration_metrics_values)
-  write_post_duration_avg_ms = sum(float(value) for value in write_post_duration_metrics_values if value != 0)/2 if write_post_duration_metrics_values else 0
-  notifications_sent_metrics = get_filter_metrics('sn_notificationsSent')
-  notifications_sent = sum(int(value) for value in pattern.findall(notifications_sent_metrics))
-
-  write_post_duration_avg_ms = "{:.2f}".format(write_post_duration_avg_ms)
-
-
-  results = {
-    'num_requests': int(requests),
-    'num_notifications_sent': int(notifications_sent),
-    'avg_write_post_duration_ms': float(write_post_duration_avg_ms),
-  }
-
-  filepath = f"evaluation/local/{timestamp}/metrics-eu.yml"
-  os.makedirs(os.path.dirname(filepath), exist_ok=True)
-  with open(filepath, 'w') as outfile:
-    yaml.dump(results, outfile, default_flow_style=False)
-  print(yaml.dump(results, default_flow_style=False))
-  print(f"[INFO] evaluation results saved at {filepath}")
-
-def local_metrics_us(timestamp):
-  from plumbum.cmd import weaver
-  import re
-
-  if timestamp== None:
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-
-  pattern = re.compile(r'^.*│.*│.*│.*│\s*(\d+\.?\d*)\s*│.*$', re.MULTILINE)
-
-  def get_filter_metrics(metric_name):
-    return weaver['multi', 'metrics', metric_name]()
-
-  # wkr2 api
-  inconsitencies_metrics = get_filter_metrics('sn_inconsistencies')
-  inconsistencies_count = sum(int(value) for value in pattern.findall(inconsitencies_metrics))
-  notifications_received_metrics = get_filter_metrics('notificationsReceived')
-  notifications_received = sum(int(value) for value in pattern.findall(notifications_received_metrics))
-  read_post_duration_metrics = get_filter_metrics('sn_read_post_duration_ms')
-  read_post_duration_metrics_values = pattern.findall(read_post_duration_metrics)
-  print(read_post_duration_metrics_values)
-  read_post_duration_avg_ms = sum(float(value) for value in read_post_duration_metrics_values if value != 0)/2 if read_post_duration_metrics_values else 0
-  queue_duration_metrics = get_filter_metrics('sn_queue_duration_ms')
-  queue_duration_metrics_values = pattern.findall(queue_duration_metrics)
-  print(queue_duration_metrics_values)
-  queue_duration_avg_ms = sum(float(value) for value in queue_duration_metrics_values if value != 0)/2 if queue_duration_metrics_values else 0
-  consistency_window_metrics = get_filter_metrics('sn_consistency_window_ms')
-  consistency_window_metrics_values = pattern.findall(consistency_window_metrics)
-  print(consistency_window_metrics_values)
-  consistency_window_avg_ms = sum(float(value) for value in consistency_window_metrics_values if value != 0)/2 if consistency_window_metrics_values else 0
-
-  consistency_window_median_ms = get_consistency_window(APP_PORT)
-
-  read_post_duration_avg_ms = "{:.2f}".format(read_post_duration_avg_ms)
-  queue_duration_avg_ms = "{:.2f}".format(queue_duration_avg_ms)
-  consistency_window_avg_ms = "{:.2f}".format(consistency_window_avg_ms)
-  consistency_window_median_ms = "{:.2f}".format(consistency_window_median_ms)
-
-  results = {
-    'num_notifications_received': int(notifications_received),
-    'num_inconsistencies': int(inconsistencies_count),
-    'avg_read_post_duration_ms': float(read_post_duration_avg_ms),
-    'avg_queue_duration_ms': float(queue_duration_avg_ms),
-    'avg_consistency_window_ms': float(consistency_window_avg_ms),
-    'consistency_window_median_ms': float(consistency_window_median_ms),
-  }
-
-  filepath = f"evaluation/local/{timestamp}/metrics-us.yml"
-  os.makedirs(os.path.dirname(filepath), exist_ok=True)
-  with open(filepath, 'w') as outfile:
-    yaml.dump(results, outfile, default_flow_style=False)
-  print(yaml.dump(results, default_flow_style=False))
-  print(f"[INFO] evaluation results saved at {filepath}")
 
 def local_consistency_window():
   url = 'http://localhost:12346/consistency_window'
@@ -1041,12 +759,12 @@ if __name__ == "__main__":
 
   commands = [
     # gcp
-    'configure', 'deploy', 'start-app-redis', 'start-app-mongo', 'start-app-mysql', 'start-datastores', 'stop-datastores', 'stop-app',
-    'restart-app-redis', 'restart-app-mongo', 'restart-app-mysql', 'restart-datastores', 'clean', 'info', 'consistency-window',
+    'configure', 'deploy', 'start-datastores', 'stop-datastores', 'cluster-eu', 'cluster-us',
+    'restart-datastores', 'clean', 'info', 'consistency-window',
     # datastores
-    'storage-deploy', 'storage-run', 'storage-info', 'storage-clean', 'storage-build', 'replicate-datastores', 'update-envoy-file', 'redis-hosts', 'posts-sizes',
+    'storage-run', 'storage-info', 'storage-clean', 'storage-build', 'replicate-datastores', 'update-envoy-file', 'redis-hosts', 'posts-sizes',
     # eval
-    'wrk2', 'wrk2-vm', 'metrics', 'metrics-eu', 'metrics-us'
+    'wrk2', 'wrk2-vm', 'metrics',
   ]
 
   for cmd in commands:
@@ -1057,9 +775,11 @@ if __name__ == "__main__":
       parser.add_argument('-d', '--duration', default=30, help="Duration")
       parser.add_argument('-t', '--threads', default=2, help="Number of threads")
       parser.add_argument('-r', '--rate', default=50, help="Number of requests per second")
+      parser.add_argument('-hteu', '--host_eu', default="localhost", help="host of the eu load balancer")
+      parser.add_argument('-htus', '--host_us', default="localhost", help="host of the us load balancer")
     if cmd == 'wrk2-vm':
       parser.add_argument('-ts', '--timestamp', help="Timestamp of workload")
-    if cmd == 'metrics' or cmd == 'metrics-eu' or cmd == 'metrics-us':
+    if cmd == 'metrics':
       parser.add_argument('-t', '--timestamp', help="Timestamp of workload")
 
   args = vars(main_parser.parse_args())

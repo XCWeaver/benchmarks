@@ -1,11 +1,11 @@
-["us_deployment/Notifier"]
-rabbitmq_address    = "localhost"
+["us-deployment/Notifier"]
+rabbitmq_address    = "34.171.188.100"
 rabbitmq_port       = "5673"
 rabbitmq_user    = "admin"
 rabbitmq_password       = "admin"
 
-["us_deployment/Post_storage_america"]
-mysql_address       = "127.0.0.1"
+["us-deployment/PostStorageUs"]
+mysql_address       = "34.171.188.100"
 mysql_port          = "3308"
 mysql_password          = "root_password"
 mysql_user          = "root"
@@ -13,14 +13,14 @@ mysql_datastore          = "post_notification"
 
 
 [serviceweaver]
-binary = "./us_deployment"
+binary = "./us-deployment"
 
 [single]
-listeners.post_notification = {address = "0.0.0.0:12346"}
+listeners.postnot = {address = "0.0.0.0:12346"}
 
 [multi]
-listeners.post_notification = {address = "0.0.0.0:12346"}
+listeners.postnot = {address = "0.0.0.0:12346"}
 
 [gke]
 regions = ["us-west4"]
-listeners.post_notification = {public_hostname = "hello.com"}
+listeners.postnot = {public_hostname = "hello.com"}

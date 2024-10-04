@@ -16,28 +16,28 @@ import (
 
 func init() {
 	codegen.Register(codegen.Registration{
-		Name:  "us_deployment/Follower_Notify",
-		Iface: reflect.TypeOf((*Follower_Notify)(nil)).Elem(),
-		Impl:  reflect.TypeOf(follower_Notify{}),
+		Name:  "us-deployment/FollowerNotify",
+		Iface: reflect.TypeOf((*FollowerNotify)(nil)).Elem(),
+		Impl:  reflect.TypeOf(followerNotify{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return follower_Notify_local_stub{impl: impl.(Follower_Notify), tracer: tracer, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Follower_Notify", Method: "Follower_Notify", Remote: false, Generated: true})}
+			return followerNotify_local_stub{impl: impl.(FollowerNotify), tracer: tracer, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/FollowerNotify", Method: "Follower_Notify", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return follower_Notify_client_stub{stub: stub, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Follower_Notify", Method: "Follower_Notify", Remote: true, Generated: true})}
+			return followerNotify_client_stub{stub: stub, follower_NotifyMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/FollowerNotify", Method: "Follower_Notify", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
-			return follower_Notify_server_stub{impl: impl.(Follower_Notify), addLoad: addLoad}
+			return followerNotify_server_stub{impl: impl.(FollowerNotify), addLoad: addLoad}
 		},
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
-			return follower_Notify_reflect_stub{caller: caller}
+			return followerNotify_reflect_stub{caller: caller}
 		},
-		RefData: "⟦e9d5b8e5:wEaVeReDgE:us_deployment/Follower_Notify→us_deployment/Post_storage_america⟧\n",
+		RefData: "⟦3353ee50:wEaVeReDgE:us-deployment/FollowerNotify→us-deployment/PostStorageUs⟧\n",
 	})
 	codegen.Register(codegen.Registration{
 		Name:      "github.com/ServiceWeaver/weaver/Main",
 		Iface:     reflect.TypeOf((*weaver.Main)(nil)).Elem(),
 		Impl:      reflect.TypeOf(app{}),
-		Listeners: []string{"post_notification"},
+		Listeners: []string{"postnot"},
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
 			return main_local_stub{impl: impl.(weaver.Main), tracer: tracer}
 		},
@@ -48,75 +48,77 @@ func init() {
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
 			return main_reflect_stub{caller: caller}
 		},
-		RefData: "⟦aaed80f3:wEaVeReDgE:github.com/ServiceWeaver/weaver/Main→us_deployment/Notifier⟧\n⟦d07f04e7:wEaVeReDgE:github.com/ServiceWeaver/weaver/Main→us_deployment/Post_storage_america⟧\n⟦023d4964:wEaVeRlIsTeNeRs:github.com/ServiceWeaver/weaver/Main→post_notification⟧\n",
+		RefData: "⟦d3c24f60:wEaVeReDgE:github.com/ServiceWeaver/weaver/Main→us-deployment/Notifier⟧\n⟦a5272e07:wEaVeReDgE:github.com/ServiceWeaver/weaver/Main→us-deployment/PostStorageUs⟧\n⟦e2ff0f0d:wEaVeRlIsTeNeRs:github.com/ServiceWeaver/weaver/Main→postnot⟧\n",
 	})
 	codegen.Register(codegen.Registration{
-		Name:  "us_deployment/Notifier",
+		Name:  "us-deployment/Notifier",
 		Iface: reflect.TypeOf((*Notifier)(nil)).Elem(),
 		Impl:  reflect.TypeOf(notifier{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer}
+			return notifier_local_stub{impl: impl.(Notifier), tracer: tracer, readNotificationMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/Notifier", Method: "ReadNotification", Remote: false, Generated: true})}
 		},
-		ClientStubFn: func(stub codegen.Stub, caller string) any { return notifier_client_stub{stub: stub} },
+		ClientStubFn: func(stub codegen.Stub, caller string) any {
+			return notifier_client_stub{stub: stub, readNotificationMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/Notifier", Method: "ReadNotification", Remote: true, Generated: true})}
+		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return notifier_server_stub{impl: impl.(Notifier), addLoad: addLoad}
 		},
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
 			return notifier_reflect_stub{caller: caller}
 		},
-		RefData: "⟦b5caf4b5:wEaVeReDgE:us_deployment/Notifier→us_deployment/Follower_Notify⟧\n",
+		RefData: "⟦61a073e5:wEaVeReDgE:us-deployment/Notifier→us-deployment/FollowerNotify⟧\n",
 	})
 	codegen.Register(codegen.Registration{
-		Name:  "us_deployment/Post_storage_america",
-		Iface: reflect.TypeOf((*Post_storage_america)(nil)).Elem(),
-		Impl:  reflect.TypeOf(post_storage_america{}),
+		Name:  "us-deployment/PostStorageUs",
+		Iface: reflect.TypeOf((*PostStorageUs)(nil)).Elem(),
+		Impl:  reflect.TypeOf(postStorageUs{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return post_storage_america_local_stub{impl: impl.(Post_storage_america), tracer: tracer, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetConsistencyWindowValues", Remote: false, Generated: true}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetPost", Remote: false, Generated: true})}
+			return postStorageUs_local_stub{impl: impl.(PostStorageUs), tracer: tracer, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "GetConsistencyWindowValues", Remote: false, Generated: true}), getInconsistenciesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "GetInconsistencies", Remote: false, Generated: true}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "GetPost", Remote: false, Generated: true}), resetMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "Reset", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return post_storage_america_client_stub{stub: stub, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetConsistencyWindowValues", Remote: true, Generated: true}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/Post_storage_america", Method: "GetPost", Remote: true, Generated: true})}
+			return postStorageUs_client_stub{stub: stub, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "GetConsistencyWindowValues", Remote: true, Generated: true}), getInconsistenciesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "GetInconsistencies", Remote: true, Generated: true}), getPostMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "GetPost", Remote: true, Generated: true}), resetMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us-deployment/PostStorageUs", Method: "Reset", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
-			return post_storage_america_server_stub{impl: impl.(Post_storage_america), addLoad: addLoad}
+			return postStorageUs_server_stub{impl: impl.(PostStorageUs), addLoad: addLoad}
 		},
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
-			return post_storage_america_reflect_stub{caller: caller}
+			return postStorageUs_reflect_stub{caller: caller}
 		},
 		RefData: "",
 	})
 }
 
 // weaver.InstanceOf checks.
-var _ weaver.InstanceOf[Follower_Notify] = (*follower_Notify)(nil)
+var _ weaver.InstanceOf[FollowerNotify] = (*followerNotify)(nil)
 var _ weaver.InstanceOf[weaver.Main] = (*app)(nil)
 var _ weaver.InstanceOf[Notifier] = (*notifier)(nil)
-var _ weaver.InstanceOf[Post_storage_america] = (*post_storage_america)(nil)
+var _ weaver.InstanceOf[PostStorageUs] = (*postStorageUs)(nil)
 
 // weaver.Router checks.
-var _ weaver.Unrouted = (*follower_Notify)(nil)
+var _ weaver.Unrouted = (*followerNotify)(nil)
 var _ weaver.Unrouted = (*app)(nil)
 var _ weaver.Unrouted = (*notifier)(nil)
-var _ weaver.Unrouted = (*post_storage_america)(nil)
+var _ weaver.Unrouted = (*postStorageUs)(nil)
 
 // Local stub implementations.
 
-type follower_Notify_local_stub struct {
-	impl                   Follower_Notify
+type followerNotify_local_stub struct {
+	impl                   FollowerNotify
 	tracer                 trace.Tracer
 	follower_NotifyMetrics *codegen.MethodMetrics
 }
 
-// Check that follower_Notify_local_stub implements the Follower_Notify interface.
-var _ Follower_Notify = (*follower_Notify_local_stub)(nil)
+// Check that followerNotify_local_stub implements the FollowerNotify interface.
+var _ FollowerNotify = (*followerNotify_local_stub)(nil)
 
-func (s follower_Notify_local_stub) Follower_Notify(ctx context.Context, a0 Post_id_obj, a1 int) (err error) {
+func (s followerNotify_local_stub) Follower_Notify(ctx context.Context, a0 Post_id_obj, a1 int) (err error) {
 	// Update metrics.
 	begin := s.follower_NotifyMetrics.Begin()
 	defer func() { s.follower_NotifyMetrics.End(begin, err != nil, 0, 0) }()
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "main.Follower_Notify.Follower_Notify", trace.WithSpanKind(trace.SpanKindInternal))
+		ctx, span = s.tracer.Start(ctx, "main.FollowerNotify.Follower_Notify", trace.WithSpanKind(trace.SpanKindInternal))
 		defer func() {
 			if err != nil {
 				span.RecordError(err)
@@ -138,31 +140,54 @@ type main_local_stub struct {
 var _ weaver.Main = (*main_local_stub)(nil)
 
 type notifier_local_stub struct {
-	impl   Notifier
-	tracer trace.Tracer
+	impl                    Notifier
+	tracer                  trace.Tracer
+	readNotificationMetrics *codegen.MethodMetrics
 }
 
 // Check that notifier_local_stub implements the Notifier interface.
 var _ Notifier = (*notifier_local_stub)(nil)
 
-type post_storage_america_local_stub struct {
-	impl                              Post_storage_america
-	tracer                            trace.Tracer
-	getConsistencyWindowValuesMetrics *codegen.MethodMetrics
-	getPostMetrics                    *codegen.MethodMetrics
+func (s notifier_local_stub) ReadNotification(ctx context.Context) (err error) {
+	// Update metrics.
+	begin := s.readNotificationMetrics.Begin()
+	defer func() { s.readNotificationMetrics.End(begin, err != nil, 0, 0) }()
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "main.Notifier.ReadNotification", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.ReadNotification(ctx)
 }
 
-// Check that post_storage_america_local_stub implements the Post_storage_america interface.
-var _ Post_storage_america = (*post_storage_america_local_stub)(nil)
+type postStorageUs_local_stub struct {
+	impl                              PostStorageUs
+	tracer                            trace.Tracer
+	getConsistencyWindowValuesMetrics *codegen.MethodMetrics
+	getInconsistenciesMetrics         *codegen.MethodMetrics
+	getPostMetrics                    *codegen.MethodMetrics
+	resetMetrics                      *codegen.MethodMetrics
+}
 
-func (s post_storage_america_local_stub) GetConsistencyWindowValues(ctx context.Context) (r0 []float64, err error) {
+// Check that postStorageUs_local_stub implements the PostStorageUs interface.
+var _ PostStorageUs = (*postStorageUs_local_stub)(nil)
+
+func (s postStorageUs_local_stub) GetConsistencyWindowValues(ctx context.Context) (r0 []float64, err error) {
 	// Update metrics.
 	begin := s.getConsistencyWindowValuesMetrics.Begin()
 	defer func() { s.getConsistencyWindowValuesMetrics.End(begin, err != nil, 0, 0) }()
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "main.Post_storage_america.GetConsistencyWindowValues", trace.WithSpanKind(trace.SpanKindInternal))
+		ctx, span = s.tracer.Start(ctx, "main.PostStorageUs.GetConsistencyWindowValues", trace.WithSpanKind(trace.SpanKindInternal))
 		defer func() {
 			if err != nil {
 				span.RecordError(err)
@@ -175,14 +200,34 @@ func (s post_storage_america_local_stub) GetConsistencyWindowValues(ctx context.
 	return s.impl.GetConsistencyWindowValues(ctx)
 }
 
-func (s post_storage_america_local_stub) GetPost(ctx context.Context, a0 Post_id_obj) (r0 string, err error) {
+func (s postStorageUs_local_stub) GetInconsistencies(ctx context.Context) (r0 int, err error) {
+	// Update metrics.
+	begin := s.getInconsistenciesMetrics.Begin()
+	defer func() { s.getInconsistenciesMetrics.End(begin, err != nil, 0, 0) }()
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "main.PostStorageUs.GetInconsistencies", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.GetInconsistencies(ctx)
+}
+
+func (s postStorageUs_local_stub) GetPost(ctx context.Context, a0 Post_id_obj) (r0 string, err error) {
 	// Update metrics.
 	begin := s.getPostMetrics.Begin()
 	defer func() { s.getPostMetrics.End(begin, err != nil, 0, 0) }()
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.tracer.Start(ctx, "main.Post_storage_america.GetPost", trace.WithSpanKind(trace.SpanKindInternal))
+		ctx, span = s.tracer.Start(ctx, "main.PostStorageUs.GetPost", trace.WithSpanKind(trace.SpanKindInternal))
 		defer func() {
 			if err != nil {
 				span.RecordError(err)
@@ -195,17 +240,37 @@ func (s post_storage_america_local_stub) GetPost(ctx context.Context, a0 Post_id
 	return s.impl.GetPost(ctx, a0)
 }
 
+func (s postStorageUs_local_stub) Reset(ctx context.Context) (err error) {
+	// Update metrics.
+	begin := s.resetMetrics.Begin()
+	defer func() { s.resetMetrics.End(begin, err != nil, 0, 0) }()
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "main.PostStorageUs.Reset", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.Reset(ctx)
+}
+
 // Client stub implementations.
 
-type follower_Notify_client_stub struct {
+type followerNotify_client_stub struct {
 	stub                   codegen.Stub
 	follower_NotifyMetrics *codegen.MethodMetrics
 }
 
-// Check that follower_Notify_client_stub implements the Follower_Notify interface.
-var _ Follower_Notify = (*follower_Notify_client_stub)(nil)
+// Check that followerNotify_client_stub implements the FollowerNotify interface.
+var _ FollowerNotify = (*followerNotify_client_stub)(nil)
 
-func (s follower_Notify_client_stub) Follower_Notify(ctx context.Context, a0 Post_id_obj, a1 int) (err error) {
+func (s followerNotify_client_stub) Follower_Notify(ctx context.Context, a0 Post_id_obj, a1 int) (err error) {
 	// Update metrics.
 	var requestBytes, replyBytes int
 	begin := s.follower_NotifyMetrics.Begin()
@@ -214,7 +279,7 @@ func (s follower_Notify_client_stub) Follower_Notify(ctx context.Context, a0 Pos
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "main.Follower_Notify.Follower_Notify", trace.WithSpanKind(trace.SpanKindClient))
+		ctx, span = s.stub.Tracer().Start(ctx, "main.FollowerNotify.Follower_Notify", trace.WithSpanKind(trace.SpanKindClient))
 	}
 
 	defer func() {
@@ -236,7 +301,7 @@ func (s follower_Notify_client_stub) Follower_Notify(ctx context.Context, a0 Pos
 
 	// Preallocate a buffer of the right size.
 	size := 0
-	size += serviceweaver_size_Post_id_obj_73973f9f(&a0)
+	size += serviceweaver_size_Post_id_obj_8af3edf5(&a0)
 	size += 8
 	enc := codegen.NewEncoder()
 	enc.Reset(size)
@@ -270,22 +335,71 @@ type main_client_stub struct {
 var _ weaver.Main = (*main_client_stub)(nil)
 
 type notifier_client_stub struct {
-	stub codegen.Stub
+	stub                    codegen.Stub
+	readNotificationMetrics *codegen.MethodMetrics
 }
 
 // Check that notifier_client_stub implements the Notifier interface.
 var _ Notifier = (*notifier_client_stub)(nil)
 
-type post_storage_america_client_stub struct {
-	stub                              codegen.Stub
-	getConsistencyWindowValuesMetrics *codegen.MethodMetrics
-	getPostMetrics                    *codegen.MethodMetrics
+func (s notifier_client_stub) ReadNotification(ctx context.Context) (err error) {
+	// Update metrics.
+	var requestBytes, replyBytes int
+	begin := s.readNotificationMetrics.Begin()
+	defer func() { s.readNotificationMetrics.End(begin, err != nil, requestBytes, replyBytes) }()
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "main.Notifier.ReadNotification", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+			if err != nil {
+				err = errors.Join(weaver.RemoteCallError, err)
+			}
+		}
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+
+	}()
+
+	var shardKey uint64
+
+	// Call the remote method.
+	var results []byte
+	results, err = s.stub.Run(ctx, 0, nil, shardKey)
+	replyBytes = len(results)
+	if err != nil {
+		err = errors.Join(weaver.RemoteCallError, err)
+		return
+	}
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	err = dec.Error()
+	return
 }
 
-// Check that post_storage_america_client_stub implements the Post_storage_america interface.
-var _ Post_storage_america = (*post_storage_america_client_stub)(nil)
+type postStorageUs_client_stub struct {
+	stub                              codegen.Stub
+	getConsistencyWindowValuesMetrics *codegen.MethodMetrics
+	getInconsistenciesMetrics         *codegen.MethodMetrics
+	getPostMetrics                    *codegen.MethodMetrics
+	resetMetrics                      *codegen.MethodMetrics
+}
 
-func (s post_storage_america_client_stub) GetConsistencyWindowValues(ctx context.Context) (r0 []float64, err error) {
+// Check that postStorageUs_client_stub implements the PostStorageUs interface.
+var _ PostStorageUs = (*postStorageUs_client_stub)(nil)
+
+func (s postStorageUs_client_stub) GetConsistencyWindowValues(ctx context.Context) (r0 []float64, err error) {
 	// Update metrics.
 	var requestBytes, replyBytes int
 	begin := s.getConsistencyWindowValuesMetrics.Begin()
@@ -294,7 +408,7 @@ func (s post_storage_america_client_stub) GetConsistencyWindowValues(ctx context
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "main.Post_storage_america.GetConsistencyWindowValues", trace.WithSpanKind(trace.SpanKindClient))
+		ctx, span = s.stub.Tracer().Start(ctx, "main.PostStorageUs.GetConsistencyWindowValues", trace.WithSpanKind(trace.SpanKindClient))
 	}
 
 	defer func() {
@@ -332,7 +446,54 @@ func (s post_storage_america_client_stub) GetConsistencyWindowValues(ctx context
 	return
 }
 
-func (s post_storage_america_client_stub) GetPost(ctx context.Context, a0 Post_id_obj) (r0 string, err error) {
+func (s postStorageUs_client_stub) GetInconsistencies(ctx context.Context) (r0 int, err error) {
+	// Update metrics.
+	var requestBytes, replyBytes int
+	begin := s.getInconsistenciesMetrics.Begin()
+	defer func() { s.getInconsistenciesMetrics.End(begin, err != nil, requestBytes, replyBytes) }()
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "main.PostStorageUs.GetInconsistencies", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+			if err != nil {
+				err = errors.Join(weaver.RemoteCallError, err)
+			}
+		}
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+
+	}()
+
+	var shardKey uint64
+
+	// Call the remote method.
+	var results []byte
+	results, err = s.stub.Run(ctx, 1, nil, shardKey)
+	replyBytes = len(results)
+	if err != nil {
+		err = errors.Join(weaver.RemoteCallError, err)
+		return
+	}
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	r0 = dec.Int()
+	err = dec.Error()
+	return
+}
+
+func (s postStorageUs_client_stub) GetPost(ctx context.Context, a0 Post_id_obj) (r0 string, err error) {
 	// Update metrics.
 	var requestBytes, replyBytes int
 	begin := s.getPostMetrics.Begin()
@@ -341,7 +502,7 @@ func (s post_storage_america_client_stub) GetPost(ctx context.Context, a0 Post_i
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		// Create a child span for this method.
-		ctx, span = s.stub.Tracer().Start(ctx, "main.Post_storage_america.GetPost", trace.WithSpanKind(trace.SpanKindClient))
+		ctx, span = s.stub.Tracer().Start(ctx, "main.PostStorageUs.GetPost", trace.WithSpanKind(trace.SpanKindClient))
 	}
 
 	defer func() {
@@ -363,7 +524,7 @@ func (s post_storage_america_client_stub) GetPost(ctx context.Context, a0 Post_i
 
 	// Preallocate a buffer of the right size.
 	size := 0
-	size += serviceweaver_size_Post_id_obj_73973f9f(&a0)
+	size += serviceweaver_size_Post_id_obj_8af3edf5(&a0)
 	enc := codegen.NewEncoder()
 	enc.Reset(size)
 
@@ -374,7 +535,7 @@ func (s post_storage_america_client_stub) GetPost(ctx context.Context, a0 Post_i
 	// Call the remote method.
 	requestBytes = len(enc.Data())
 	var results []byte
-	results, err = s.stub.Run(ctx, 1, enc.Data(), shardKey)
+	results, err = s.stub.Run(ctx, 2, enc.Data(), shardKey)
 	replyBytes = len(results)
 	if err != nil {
 		err = errors.Join(weaver.RemoteCallError, err)
@@ -384,6 +545,52 @@ func (s post_storage_america_client_stub) GetPost(ctx context.Context, a0 Post_i
 	// Decode the results.
 	dec := codegen.NewDecoder(results)
 	r0 = dec.String()
+	err = dec.Error()
+	return
+}
+
+func (s postStorageUs_client_stub) Reset(ctx context.Context) (err error) {
+	// Update metrics.
+	var requestBytes, replyBytes int
+	begin := s.resetMetrics.Begin()
+	defer func() { s.resetMetrics.End(begin, err != nil, requestBytes, replyBytes) }()
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "main.PostStorageUs.Reset", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+			if err != nil {
+				err = errors.Join(weaver.RemoteCallError, err)
+			}
+		}
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+
+	}()
+
+	var shardKey uint64
+
+	// Call the remote method.
+	var results []byte
+	results, err = s.stub.Run(ctx, 3, nil, shardKey)
+	replyBytes = len(results)
+	if err != nil {
+		err = errors.Join(weaver.RemoteCallError, err)
+		return
+	}
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
 	err = dec.Error()
 	return
 }
@@ -413,16 +620,16 @@ please file an issue at https://github.com/ServiceWeaver/weaver/issues.
 
 // Server stub implementations.
 
-type follower_Notify_server_stub struct {
-	impl    Follower_Notify
+type followerNotify_server_stub struct {
+	impl    FollowerNotify
 	addLoad func(key uint64, load float64)
 }
 
-// Check that follower_Notify_server_stub implements the codegen.Server interface.
-var _ codegen.Server = (*follower_Notify_server_stub)(nil)
+// Check that followerNotify_server_stub implements the codegen.Server interface.
+var _ codegen.Server = (*followerNotify_server_stub)(nil)
 
 // GetStubFn implements the codegen.Server interface.
-func (s follower_Notify_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
+func (s followerNotify_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
 	switch method {
 	case "Follower_Notify":
 		return s.follower_Notify
@@ -431,7 +638,7 @@ func (s follower_Notify_server_stub) GetStubFn(method string) func(ctx context.C
 	}
 }
 
-func (s follower_Notify_server_stub) follower_Notify(ctx context.Context, args []byte) (res []byte, err error) {
+func (s followerNotify_server_stub) follower_Notify(ctx context.Context, args []byte) (res []byte, err error) {
 	// Catch and return any panics detected during encoding/decoding/rpc.
 	defer func() {
 		if err == nil {
@@ -484,32 +691,57 @@ var _ codegen.Server = (*notifier_server_stub)(nil)
 // GetStubFn implements the codegen.Server interface.
 func (s notifier_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
 	switch method {
+	case "ReadNotification":
+		return s.readNotification
 	default:
 		return nil
 	}
 }
 
-type post_storage_america_server_stub struct {
-	impl    Post_storage_america
+func (s notifier_server_stub) readNotification(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	appErr := s.impl.ReadNotification(ctx)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
+type postStorageUs_server_stub struct {
+	impl    PostStorageUs
 	addLoad func(key uint64, load float64)
 }
 
-// Check that post_storage_america_server_stub implements the codegen.Server interface.
-var _ codegen.Server = (*post_storage_america_server_stub)(nil)
+// Check that postStorageUs_server_stub implements the codegen.Server interface.
+var _ codegen.Server = (*postStorageUs_server_stub)(nil)
 
 // GetStubFn implements the codegen.Server interface.
-func (s post_storage_america_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
+func (s postStorageUs_server_stub) GetStubFn(method string) func(ctx context.Context, args []byte) ([]byte, error) {
 	switch method {
 	case "GetConsistencyWindowValues":
 		return s.getConsistencyWindowValues
+	case "GetInconsistencies":
+		return s.getInconsistencies
 	case "GetPost":
 		return s.getPost
+	case "Reset":
+		return s.reset
 	default:
 		return nil
 	}
 }
 
-func (s post_storage_america_server_stub) getConsistencyWindowValues(ctx context.Context, args []byte) (res []byte, err error) {
+func (s postStorageUs_server_stub) getConsistencyWindowValues(ctx context.Context, args []byte) (res []byte, err error) {
 	// Catch and return any panics detected during encoding/decoding/rpc.
 	defer func() {
 		if err == nil {
@@ -529,7 +761,27 @@ func (s post_storage_america_server_stub) getConsistencyWindowValues(ctx context
 	return enc.Data(), nil
 }
 
-func (s post_storage_america_server_stub) getPost(ctx context.Context, args []byte) (res []byte, err error) {
+func (s postStorageUs_server_stub) getInconsistencies(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	r0, appErr := s.impl.GetInconsistencies(ctx)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	enc.Int(r0)
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
+func (s postStorageUs_server_stub) getPost(ctx context.Context, args []byte) (res []byte, err error) {
 	// Catch and return any panics detected during encoding/decoding/rpc.
 	defer func() {
 		if err == nil {
@@ -554,16 +806,35 @@ func (s post_storage_america_server_stub) getPost(ctx context.Context, args []by
 	return enc.Data(), nil
 }
 
+func (s postStorageUs_server_stub) reset(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	appErr := s.impl.Reset(ctx)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
 // Reflect stub implementations.
 
-type follower_Notify_reflect_stub struct {
+type followerNotify_reflect_stub struct {
 	caller func(string, context.Context, []any, []any) error
 }
 
-// Check that follower_Notify_reflect_stub implements the Follower_Notify interface.
-var _ Follower_Notify = (*follower_Notify_reflect_stub)(nil)
+// Check that followerNotify_reflect_stub implements the FollowerNotify interface.
+var _ FollowerNotify = (*followerNotify_reflect_stub)(nil)
 
-func (s follower_Notify_reflect_stub) Follower_Notify(ctx context.Context, a0 Post_id_obj, a1 int) (err error) {
+func (s followerNotify_reflect_stub) Follower_Notify(ctx context.Context, a0 Post_id_obj, a1 int) (err error) {
 	err = s.caller("Follower_Notify", ctx, []any{a0, a1}, []any{})
 	return
 }
@@ -582,20 +853,35 @@ type notifier_reflect_stub struct {
 // Check that notifier_reflect_stub implements the Notifier interface.
 var _ Notifier = (*notifier_reflect_stub)(nil)
 
-type post_storage_america_reflect_stub struct {
+func (s notifier_reflect_stub) ReadNotification(ctx context.Context) (err error) {
+	err = s.caller("ReadNotification", ctx, []any{}, []any{})
+	return
+}
+
+type postStorageUs_reflect_stub struct {
 	caller func(string, context.Context, []any, []any) error
 }
 
-// Check that post_storage_america_reflect_stub implements the Post_storage_america interface.
-var _ Post_storage_america = (*post_storage_america_reflect_stub)(nil)
+// Check that postStorageUs_reflect_stub implements the PostStorageUs interface.
+var _ PostStorageUs = (*postStorageUs_reflect_stub)(nil)
 
-func (s post_storage_america_reflect_stub) GetConsistencyWindowValues(ctx context.Context) (r0 []float64, err error) {
+func (s postStorageUs_reflect_stub) GetConsistencyWindowValues(ctx context.Context) (r0 []float64, err error) {
 	err = s.caller("GetConsistencyWindowValues", ctx, []any{}, []any{&r0})
 	return
 }
 
-func (s post_storage_america_reflect_stub) GetPost(ctx context.Context, a0 Post_id_obj) (r0 string, err error) {
+func (s postStorageUs_reflect_stub) GetInconsistencies(ctx context.Context) (r0 int, err error) {
+	err = s.caller("GetInconsistencies", ctx, []any{}, []any{&r0})
+	return
+}
+
+func (s postStorageUs_reflect_stub) GetPost(ctx context.Context, a0 Post_id_obj) (r0 string, err error) {
 	err = s.caller("GetPost", ctx, []any{a0}, []any{&r0})
+	return
+}
+
+func (s postStorageUs_reflect_stub) Reset(ctx context.Context) (err error) {
+	err = s.caller("Reset", ctx, []any{}, []any{})
 	return
 }
 
@@ -654,9 +940,9 @@ func serviceweaver_dec_slice_float64_946dd0da(dec *codegen.Decoder) []float64 {
 
 // Size implementations.
 
-// serviceweaver_size_Post_id_obj_73973f9f returns the size (in bytes) of the serialization
+// serviceweaver_size_Post_id_obj_8af3edf5 returns the size (in bytes) of the serialization
 // of the provided type.
-func serviceweaver_size_Post_id_obj_73973f9f(x *Post_id_obj) int {
+func serviceweaver_size_Post_id_obj_8af3edf5(x *Post_id_obj) int {
 	size := 0
 	size += 0
 	size += (4 + len(x.PostId))

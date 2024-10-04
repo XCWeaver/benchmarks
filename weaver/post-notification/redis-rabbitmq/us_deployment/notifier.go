@@ -17,13 +17,15 @@ type Message struct {
 
 // Notifier component.
 type Notifier interface {
+	ReadNotification(ctx context.Context) error
 }
 
 // Implementation of the Notifier component.
 type notifier struct {
 	weaver.Implements[Notifier]
-	follower_Notify weaver.Ref[Follower_Notify]
+	follower_Notify weaver.Ref[FollowerNotify]
 	weaver.WithConfig[notifierOptions]
+	conn *amqp.Connection
 }
 
 type notifierOptions struct {
@@ -36,18 +38,14 @@ type notifierOptions struct {
 func (n *notifier) Init(ctx context.Context) error {
 	logger := n.Logger(ctx)
 
-	conn, err := amqp.Dial("amqp://" + n.Config().RabbitMQUser + ":" + n.Config().RabbitMQPassword + "@" + n.Config().RabbitMQAddr + ":" + n.Config().RabbitMQPort + "/")
+	var err error
+	n.conn, err = amqp.Dial("amqp://" + n.Config().RabbitMQUser + ":" + n.Config().RabbitMQPassword + "@" + n.Config().RabbitMQAddr + ":" + n.Config().RabbitMQPort + "/")
 	if err != nil {
 		logger.Error("Failed to connect to RabbitMQ", "msg", err.Error())
 		return err
 	}
 
-	logger.Info("notifier service at eu running!", "host", n.Config().RabbitMQAddr, "port", n.Config().RabbitMQPort, "user", n.Config().RabbitMQUser, "password", n.Config().RabbitMQPassword)
-
-	err = n.readNotification(ctx, conn)
-	if err != nil {
-		return err
-	}
+	logger.Info("notifier service at us running!", "host", n.Config().RabbitMQAddr, "port", n.Config().RabbitMQPort, "user", n.Config().RabbitMQUser, "password", n.Config().RabbitMQPassword)
 
 	return nil
 }
@@ -72,10 +70,10 @@ func (n *notifier) processMessage(ctx context.Context, msg amqp.Delivery) {
 	n.follower_Notify.Get().Follower_Notify(ctx, postId, userId)
 }
 
-func (n *notifier) readNotification(ctx context.Context, conn *amqp.Connection) error {
+func (n *notifier) ReadNotification(ctx context.Context) error {
 	logger := n.Logger(ctx)
 
-	ch, err := conn.Channel()
+	ch, err := n.conn.Channel()
 	if err != nil {
 		logger.Error("Failed to open a channel", "msg", err.Error())
 		return err
@@ -107,6 +105,7 @@ func (n *notifier) readNotification(ctx context.Context, conn *amqp.Connection) 
 	}
 
 	for d := range msgs {
+		logger.Debug("processing messages")
 		go n.processMessage(ctx, d)
 	}
 	return nil

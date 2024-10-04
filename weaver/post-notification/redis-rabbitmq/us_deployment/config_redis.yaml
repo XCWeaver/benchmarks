@@ -1,0 +1,19 @@
+appConfig: weaver.toml
+repo: docker.io/tiagomalhadas
+
+ScalingSpec:
+  minReplicas: 1
+  maxReplicas: 1
+
+listeners:
+  - name: postnot
+    public: true
+    port: 12345
+
+resourceSpec:
+  requests:
+    memory: "8Gi"
+    cpu: "2"  
+  limits:
+    memory: "8Gi"
+    cpu: "2"  
