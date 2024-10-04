@@ -61,7 +61,7 @@ var _ xcweaver.Main = (*main_client_stub)(nil)
 // you run "go build" or "go run".
 var _ codegen.LatestVersion = codegen.Version[[0][24]struct{}](`
 
-ERROR: You generated this file with 'xcweaver generate' v0.0.5 (codegen
+ERROR: You generated this file with 'xcweaver generate' v0.24.3 (codegen
 version v0.24.0). The generated code is incompatible with the version of the
 github.com/XCWeaver/xcweaver module that you're using. The xcweaver module
 version can be found in your go.mod file or by running the following command.

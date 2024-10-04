@@ -15,3 +15,4 @@ workload_timestamp: null
 threads: null
 duration: null
 rate: null
+host: null

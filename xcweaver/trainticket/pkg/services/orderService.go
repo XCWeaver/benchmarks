@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"sync"
 
 	"trainticket/pkg/model"
 
@@ -37,6 +38,7 @@ type orderService struct {
 	//xcweaver.WithConfig[orderServiceOptions]
 	//client *mongo.Client
 	//stationService xcweaver.Ref[StationService]
+	mu     sync.Mutex
 	roles  []string
 	orders []model.Order
 }
@@ -58,7 +60,6 @@ func (osi *orderService) Init(ctx context.Context) error {
 	osi.orders = initOrders()
 
 	logger.Info("order service running!", "firstOrder", osi.orders[0])
-
 	//logger.Info("order service running!", "mongodb_addr", osi.Config().MongoAddr, "mongodb_port", osi.Config().MongoPort)
 	return nil
 }
@@ -373,6 +374,8 @@ func (osi *orderService) PayOrder(ctx context.Context, orderId, token string) (u
 func (osi *orderService) GetOrderById(ctx context.Context, orderId, token string) (model.Order, error) {
 	logger := osi.Logger(ctx)
 	logger.Info("entering GetOrderById", "orderId", orderId)
+	osi.mu.Lock()
+	defer osi.mu.Unlock()
 
 	/*err := util.Authenticate(token)
 	if err != nil {
@@ -411,6 +414,8 @@ func (osi *orderService) GetOrderById(ctx context.Context, orderId, token string
 func (osi *orderService) ModifyOrder(ctx context.Context, orderId string, status uint16, token string) (model.Order, error) {
 	logger := osi.Logger(ctx)
 	logger.Info("entering ModifyOrder", "orderId", orderId, "status", status)
+	osi.mu.Lock()
+	defer osi.mu.Unlock()
 
 	/*err := util.Authenticate(token, osi.roles...)
 	if err != nil {

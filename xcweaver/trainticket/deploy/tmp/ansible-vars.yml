@@ -1,8 +1,0 @@
-app_folder_name: trainticket
-base_dir: /home/tmalhadas/XCWeaver/tese/xcweaver/trainticket
-deployment_type: gcp
-duration: '300'
-rate: '200'
-stack: trainticket
-threads: '20'
-workload_timestamp: 2024-09-11_00:40:38

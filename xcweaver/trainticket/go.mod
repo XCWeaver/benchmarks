@@ -2,7 +2,7 @@ module trainticket
 
 go 1.21.1
 
-require github.com/XCWeaver/xcweaver v0.0.5
+require github.com/XCWeaver/xcweaver v0.24.3
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect

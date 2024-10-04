@@ -18,6 +18,8 @@ type CancelService interface {
 	Calculate(ctx context.Context, orderId, token string) (string, error)
 	CancelTicket(ctx context.Context, orderId, loginId, token string) (string, error)
 	GetConsistencyWindowValues(ctx context.Context) ([]float64, error)
+	GetInconsistencies(ctx context.Context) (int, error)
+	Reset(ctx context.Context) error
 }
 
 type cancelService struct {
@@ -30,15 +32,18 @@ type cancelService struct {
 	roles                   []string
 	mu                      sync.Mutex
 	consistencyWindowValues []float64
+	muInc                   sync.Mutex
+	inconsistencies         int
 }
 
 func (csi *cancelService) Init(ctx context.Context) error {
 	logger := csi.Logger(ctx)
 
-	//What are the roles?
 	csi.roles = append(csi.roles, "role1")
 	csi.roles = append(csi.roles, "role2")
 	csi.roles = append(csi.roles, "role3")
+
+	csi.inconsistencies = 0
 
 	logger.Info("cancel service running!")
 	return nil
@@ -94,14 +99,14 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 	if err != nil {
 		return "", err
 	}*/
+	startTimeMs := time.Now().UnixMilli()
 
 	order, err := csi.orderService.Get().GetOrderById(ctx, orderId, token)
 	if err == nil {
 		status := model.OrderStatus(order.Status)
-		if status == model.Paid || status == model.NotPaid || status == model.Change {
+		if status == model.Paid || status == model.NotPaid || status == model.Change || status == model.Cancel {
 			/*********************** Fault Reproduction - Error Process Seq *************************/
 
-			startTimeMs := time.Now().UnixMilli()
 			// 1. cancel order
 			_, err = csi.orderService.Get().ModifyOrder(ctx, orderId, 4, token)
 			if err != nil {
@@ -133,6 +138,9 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 			if alive[0] == 1 {
 				logger.Error("Assynchronous call not yet finished!")
 				tt_metrics.Inconsistencies.Inc()
+				csi.muInc.Lock()
+				csi.inconsistencies += 1
+				csi.muInc.Unlock()
 				return "Cancelation failed", nil
 			}
 			if err1 != nil {
@@ -145,17 +153,11 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 			return "", err
 		}
 		/*********************** Fault Reproduction - Error Process Seq *************************/
-
-		startTimeMs := time.Now().UnixMilli()
 		// 1. cancel order
 		_, err = csi.orderOtherService.Get().ModifyOrder(ctx, orderId, 4, token)
 		if err != nil {
 			return "", err
 		}
-
-		/*var wg sync.WaitGroup
-		wg.Add(2)
-		var err1, err2 error*/
 
 		// 2. drawback money
 		refund := calculateRefund(order)
@@ -182,6 +184,9 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 		if alive[0] == 1 {
 			logger.Error("Assynchronous call not yet finished!")
 			tt_metrics.Inconsistencies.Inc()
+			csi.muInc.Lock()
+			csi.inconsistencies += 1
+			csi.muInc.Unlock()
 			return "Cancelation failed", nil
 		}
 		if err1 != nil {
@@ -192,11 +197,24 @@ func (csi *cancelService) CancelTicket(ctx context.Context, orderId, loginId, to
 	return "Cancelation successful", nil
 }
 
+func (csi *cancelService) GetInconsistencies(ctx context.Context) (int, error) {
+	csi.muInc.Lock()
+	inconsistencies := csi.inconsistencies
+	csi.muInc.Unlock()
+	return inconsistencies, nil
+}
+
 func (csi *cancelService) GetConsistencyWindowValues(ctx context.Context) ([]float64, error) {
 	csi.mu.Lock()
 	values := csi.consistencyWindowValues
 	csi.mu.Unlock()
 	return values, nil
+}
+
+func (csi *cancelService) Reset(ctx context.Context) error {
+	csi.inconsistencies = 0
+	csi.consistencyWindowValues = []float64{}
+	return nil
 }
 
 func calculateRefund(order model.Order) string {

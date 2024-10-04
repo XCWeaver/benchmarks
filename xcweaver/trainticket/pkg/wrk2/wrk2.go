@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strconv"
 	tt_metrics "trainticket/pkg/metrics"
 	"trainticket/pkg/services"
 
@@ -87,6 +88,8 @@ func Serve(ctx context.Context, s *server) error {
 	mux.Handle("/wrk2-api/user/calculateRefund", instrument("user/calculateRefund", s.calculateRefund, http.MethodGet, http.MethodPost))*/
 	mux.Handle("/wrk2-api/user/cancelTicket", instrument("user/cancelTicket", s.cancelTicket, http.MethodGet, http.MethodPost))
 	mux.Handle("/wrk2-api/user/consistencyWindow", instrument("user/consistencyWindow", s.consistencyWindow, http.MethodGet, http.MethodPost))
+	mux.Handle("/wrk2-api/user/inconsistencies", instrument("user/inconsistencies", s.inconsistencies, http.MethodGet, http.MethodPost))
+	mux.Handle("/wrk2-api/user/reset", instrument("user/reset", s.reset, http.MethodGet, http.MethodPost))
 	//mux.Handle("/wrk2-api/user/pay", instrument("user/pay", s.pay, http.MethodGet, http.MethodPost))
 	//mux.Handle("/wrk2-api/user/rebook", instrument("user/rebook", s.rebook, http.MethodGet, http.MethodPost))
 
@@ -1243,9 +1246,6 @@ func validateCancelTicketParams(logger *slog.Logger, r *http.Request) (string, s
 	orderId := r.Form.Get("orderId")
 	loginId := r.Form.Get("loginId")
 
-	//TO-DO
-	// validate mandatory fields
-
 	return orderId, loginId, token, nil
 }
 
@@ -1287,6 +1287,31 @@ func (s *server) consistencyWindow(w http.ResponseWriter, r *http.Request) {
 	// Set the content type and write the JSON data
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonData)
+}
+
+func (s *server) inconsistencies(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	logger := s.Logger(ctx)
+	logger.Info("entering /wrk2-api/user/inconsistencies")
+
+	result, _ := s.cancelService.Get().GetInconsistencies(ctx)
+
+	w.Header().Set("Content-Type", "text/plain")
+	resultStr := strconv.Itoa(result)
+
+	w.Write([]byte(resultStr))
+}
+
+func (s *server) reset(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	logger := s.Logger(ctx)
+	logger.Info("entering /wrk2-api/user/reset")
+
+	s.cancelService.Get().Reset(ctx)
+
+	w.Header().Set("Content-Type", "text/plain")
+
+	w.Write([]byte("done!"))
 }
 
 /*func validatePayParams(logger *slog.Logger, r *http.Request) (string, string, string, string, error) {
