@@ -41,19 +41,14 @@ region              = "europe-west3"
 [single]
 listeners.socialnetwork = {address = "0.0.0.0:12345"}
 antipodeAgents.rabbitClientWriteHomeTL = {datastoreType = "RabbitMQ", host = "{{ host_us }}", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ", queue = "write-home-timeline"}
-antipodeAgents.rabbitClientCompose = {datastoreType = "RabbitMQ", host = "{{ host_us }}", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ", queue = "write-home-timeline"}
 antipodeAgents.rabbitClientUpdateHomeTL = {datastoreType = "RabbitMQ", host = "{{ host_us }}", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ", queue = "update-home-timeline"}
-antipodeAgents.mongoClientPostStorage = {datastoreType = "MongoDB", host = "{{ host_us }}", port = "27017", datastore = "post-storage"}
 antipodeAgents.mongoClientWriteHomeTL = {datastoreType = "MongoDB", host = "{{ host_us }}", port = "27018", datastore = "post-storage"}
 antipodeAgents.mongoClientUpdateHomeTL = {datastoreType = "MongoDB", host = "{{ host_us }}", port = "27018", datastore = "post-storage"}
 
 [multi]
 listeners.socialnetwork = {address = "0.0.0.0:12345"}
 antipodeAgents.rabbitClientWriteHomeTL = {datastoreType = "RabbitMQ", host = "{{ host_us }}", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ", queue = "write-home-timeline"}
-antipodeAgents.rabbitClientCompose = {datastoreType = "RabbitMQ", host = "{{ host_us }}", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ", queue = "write-home-timeline"}
-antipodeAgents.rabbitClientUpdate = {datastoreType = "RabbitMQ", host = "{{ host_us }}", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ", queue = "update-home-timeline"}
 antipodeAgents.rabbitClientUpdateHomeTL = {datastoreType = "RabbitMQ", host = "{{ host_us }}", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ", queue = "update-home-timeline"}
-antipodeAgents.mongoClientPostStorage = {datastoreType = "MongoDB", host = "{{ host_us }}", port = "27017", datastore = "post-storage"}
 antipodeAgents.mongoClientWriteHomeTL = {datastoreType = "MongoDB", host = "{{ host_us }}", port = "27018", datastore = "post-storage"}
 antipodeAgents.mongoClientUpdateHomeTL = {datastoreType = "MongoDB", host = "{{ host_us }}", port = "27018", datastore = "post-storage"}
 

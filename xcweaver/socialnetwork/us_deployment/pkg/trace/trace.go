@@ -1,7 +1,7 @@
 package trace
 
 import (
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 
 	"go.opentelemetry.io/otel/trace"
 )

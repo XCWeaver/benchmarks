@@ -1,8 +1,22 @@
 # DeathStarBench SocialNetwork @ Service Weaver
 
-Implementation of [DeathStarBench](https://github.com/delimitrou/DeathStarBench) SocialNetwork service using Service Weaver framework, drawing inspiration from the [Blueprint](https://gitlab.mpi-sws.org/cld/blueprint)'s repository.
+Implementation of [DeathStarBench](https://github.com/delimitrou/DeathStarBench) SocialNetwork benchmark using Service Weaver framework, drawing inspiration from the [Blueprint](https://gitlab.mpi-sws.org/cld/blueprint)'s repository.
 
-## Requirements
+# Table of Contents
+- [rainTicket @ Service Weaver](#deathstarbench-socialnetwork--service-weaver)
+- [Table of Contents](#table-of-contents)
+- [1. Requirements](#1-requirements)
+  - [1.1. Install Python Dependencies](#11-install-python-dependencies)
+- [2. Configuration](#2-configuration)
+  - [2.1. GCP Configuration](#21-gcp-configuration)
+  - [2.1. Workload Configuration](#21-workload-configuration)
+- [3. Application Deployment](#3-application-deployment)
+  - [3.1. GCP Deployment](#31-gcp-deployment)
+- [4. Complementary Information](#4-complementary-information)
+  - [4.1. Manual Testing of HTTP Workload Generator](#41-manual-testing-of-http-workload-generator)
+  - [4.1. Manual Testing of HTTP Requests](#41-manual-testing-of-http-requests)
+
+# 1. Requirements
 
 - [Terraform >= v1.6.6](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 - [Ansible >= v2.15.2](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
@@ -22,7 +36,9 @@ go install github.com/ServiceWeaver/weaver/cmd/weaver@v0.22.0
 ```
 
 
-Install python packages to use the `manager` script:
+## 1.1. Install Python Dependencies
+
+Install python packages to use the `manager.py` script:
 ```zsh
 pip install -r requirements.txt
 ```
@@ -39,9 +55,9 @@ sudo luarocks install luasocket
 sudo luarocks install penlight
 ```
 
-## Configuration
+# 2. Configuration
 
-### GCP Configuration
+## 2.1. GCP Configuration
 
 1. Ensure that you have a GCP project created and setup as your default project in `gcloud cli`:
 ``` zsh
@@ -64,7 +80,7 @@ gcloud config get-value project
     - Go to the keys tab and select `ADD KEY` to create a new key in JSON
     - Place your JSON file as `credentials.json` in `weaver-dsb/socialnetwork/gcp/credentials.json`
 
-### Workload Configuration
+## 2.2. Workload Configuration
 
 Generate workload binary:
 
@@ -73,63 +89,9 @@ cd wrk2
 make
 ```
 
-## Application Deployment
+# 3. Application Deployment
 
-### Local Deployment
-
-#### Weaver Multi Process
-
-Build docker images and deploy datastores (mongodb, redis, rabbitmq):
-``` zsh
-./manager.py storage-build --local
-./manager.py storage-run --local
-```
-
-Deploy and run application:
-
-``` zsh
-go build
-weaver multi deploy weaver-local.toml
-```
-
-[**OPTIONAL**] Init social graph (not necessary if workload only runs sequences of `ComposePost`, which the default for now):
-
-``` zsh
-./manager.py init-social-graph --local
-```
-
-Run workload (2 threads, 2 clients, 30 duration, 50 rate) and automatically gather metrics to `evaluation` directory:
-
-``` zsh
-# default params: 2 threads, 2 clients, 30 duration (in seconds), 50 rate
-./manager.py wrk2 --local
-```
-
-If you want, you can specify other parameters:
-``` zsh
-./manager.py wrk2 --local -t THREADS -c CLIENTS -d DURATION -r RATE
-# values used antipode evaluation:
-# threads, clients, rate
-#   2        4        50
-#   2        4        100
-#   2        4        125
-#   2        4        150
-#   2        4        160
-```
-
-If you want to just observe metrics:
-``` zsh
-./manager.py metrics --local
-```
-
-Stop datastores:
-``` zsh
-./manager.py storage-clean --local
-```
-
-### GCP Deployment
-
-#### Deploying in GCP machines for app + datastores
+## 3.1. GCP Deployment
 
 Deploy, and start your application (datastores + services). You can also display some info for docker swarm and hosts of gcp machines
 ``` zsh
@@ -157,94 +119,94 @@ Otherwise, to clean all gcp resources at the end, do:
 ./manager.py clean --gcp
 ```
 
-## Additional Info
+# 4. Complementary Information
 
-### Manual Testing of HTTP Workload Generator
+## 4.1. Manual Testing of HTTP Workload Generator
 
 Compose Posts
 
 ```zsh
 cd wrk2
-./wrk -D exp -t <num-threads> -c <num-conns> -d <duration> -L -s ./scripts/social-network/compose-post.lua http://localhost:9000/wrk2-api/post/compose -R <reqs-per-sec>
+./wrk -D exp -t <num-threads> -c <num-conns> -d <duration> -L -s ./scripts/social-network/compose-post.lua http://localhost:12345/wrk2-api/post/compose -R <reqs-per-sec>
 
 # e.g.
-./wrk -D exp -t 1 -c 1 -d 1 -L -s ./scripts/social-network/compose-post.lua http://localhost:9000/wrk2-api/post/compose -R 1
+./wrk -D exp -t 1 -c 1 -d 1 -L -s ./scripts/social-network/compose-post.lua http://localhost:12345/wrk2-api/post/compose -R 1
 ```
 
 Read Home Timelines
 
 ```zsh
 cd wrk2
-./wrk -D exp -t <num-threads> -c <num-conns> -d <duration> -L -s ./scripts/social-network/read-home-timeline.lua http://localhost:9000/wrk2-api/home-timeline/read -R <reqs-per-sec>
+./wrk -D exp -t <num-threads> -c <num-conns> -d <duration> -L -s ./scripts/social-network/read-home-timeline.lua http://localhost:12345/wrk2-api/home-timeline/read -R <reqs-per-sec>
 ```
 
 Read User Timelines
 
 ```zsh
 cd wrk2
-./wrk -D exp -t <num-threads> -c <num-conns> -d <duration> -L -s ./scripts/social-network/read-user-timeline.lua http://localhost:9000/wrk2-api/user-timeline/read -R <reqs-per-sec>
+./wrk -D exp -t <num-threads> -c <num-conns> -d <duration> -L -s ./scripts/social-network/read-user-timeline.lua http://localhost:12345/wrk2-api/user-timeline/read -R <reqs-per-sec>
 ```
 
-### Manual Testing of HTTP Requests
+## 4.2. Manual Testing of HTTP Requests
 
 **Register User**: {username, first_name, last_name, password} [user_id]
 
 ``` zsh
-curl -X POST "localhost:9000/wrk2-api/user/register" -d "username=USERNAME&user_id=USER_ID&first_name=FIRST_NAME&last_name=LAST_NAME&password=PASSWORD"
+curl -X POST "localhost:12345/wrk2-api/user/register" -d "username=USERNAME&user_id=USER_ID&first_name=FIRST_NAME&last_name=LAST_NAME&password=PASSWORD"
 
 # e.g.
-curl -X POST "localhost:9000/wrk2-api/user/register" -d "username=ana&user_id=0&first_name=ana1&last_name=ana2&password=123"
-curl -X POST "localhost:9000/wrk2-api/user/register" -d "username=bob&user_id=1&first_name=bob1&last_name=bob2&password=123"
+curl -X POST "localhost:12345/wrk2-api/user/register" -d "username=ana&user_id=0&first_name=ana1&last_name=ana2&password=123"
+curl -X POST "localhost:12345/wrk2-api/user/register" -d "username=bob&user_id=1&first_name=bob1&last_name=bob2&password=123"
 ```
 
 **Follow User**: [{user_id, followee_id}, {user_name, followee_name}]
 
 ``` zsh
-curl -X POST "localhost:9000/wrk2-api/user/follow" -d "user_id=USER_ID&followee_id=FOLLOWEE_ID"
+curl -X POST "localhost:12345/wrk2-api/user/follow" -d "user_id=USER_ID&followee_id=FOLLOWEE_ID"
 OR
-curl -X POST "localhost:9000/wrk2-api/user/follow" -d "user_name=USER_NAME&followee_name=FOLLOWEE_AME"
+curl -X POST "localhost:12345/wrk2-api/user/follow" -d "user_name=USER_NAME&followee_name=FOLLOWEE_AME"
 
 # e.g.
-curl -X POST "localhost:9000/wrk2-api/user/follow" -d "user_name=ana&followee_name=bob"
-curl -X POST "localhost:9000/wrk2-api/user/follow" -d "user_id=1&followee_id=0"
+curl -X POST "localhost:12345/wrk2-api/user/follow" -d "user_name=ana&followee_name=bob"
+curl -X POST "localhost:12345/wrk2-api/user/follow" -d "user_id=1&followee_id=0"
 ```
 
 **Unfollow User**: [{user_id, followee_id}, {username, followee_name}]
 
 ``` zsh
-curl -X POST "localhost:9000/wrk2-api/user/unfollow" -d "user_id=USER_ID&followee_id=FOLLOWEE_ID"
+curl -X POST "localhost:12345/wrk2-api/user/unfollow" -d "user_id=USER_ID&followee_id=FOLLOWEE_ID"
 
 # e.g.
-curl -X POST "localhost:9000/wrk2-api/user/unfollow" -d "user_id=1&followee_id=0"
+curl -X POST "localhost:12345/wrk2-api/user/unfollow" -d "user_id=1&followee_id=0"
 ```
 
 **Compose Post**: {user_id, text, username, post_type} [media_types, media_ids]
 
 ``` zsh
-curl -X POST "localhost:9000/wrk2-api/post/compose" -d "user_id=USER_ID&text=TEXT&username=USER_ID&post_type=POST_TYPE"
+curl -X POST "localhost:12345/wrk2-api/post/compose" -d "user_id=USER_ID&text=TEXT&username=USER_ID&post_type=POST_TYPE"
 
 # e.g.
-curl -X POST "localhost:9000/wrk2-api/post/compose" -d "user_id=0&text=helloworld_0&username=ana&post_type=0&media_types=["png"]&media_ids=[0]"
-curl -X POST "localhost:9000/wrk2-api/post/compose" -d "user_id=1&text=helloworld_0&username=username_1&post_type=0&media_types=["png"]&media_ids=[0]"
+curl -X POST "localhost:12345/wrk2-api/post/compose" -d "user_id=0&text=helloworld_0&username=ana&post_type=0&media_types=["png"]&media_ids=[0]"
+curl -X POST "localhost:12345/wrk2-api/post/compose" -d "user_id=1&text=helloworld_0&username=username_1&post_type=0&media_types=["png"]&media_ids=[0]"
 ```
 
 **Read User Timeline**: {user_id} [start, stop]
 
 ``` zsh
-curl "localhost:9000/wrk2-api/user-timeline/read" -d "user_id=USER_ID"
+curl "localhost:12345/wrk2-api/user-timeline/read" -d "user_id=USER_ID"
 
 # e.g.
-curl "localhost:9000/wrk2-api/user-timeline/read" -d "user_id=0"
-curl "localhost:9000/wrk2-api/user-timeline/read" -d "user_id=1"
+curl "localhost:12345/wrk2-api/user-timeline/read" -d "user_id=0"
+curl "localhost:12345/wrk2-api/user-timeline/read" -d "user_id=1"
 ```
 
 **Read Home Timeline**: {user_id} [start, stop]
 
 ``` zsh
-curl "localhost:9000/wrk2-api/home-timeline/read" -d "user_id=USER_ID"
+curl "localhost:12345/wrk2-api/home-timeline/read" -d "user_id=USER_ID"
 
 # e.g.
-curl "localhost:9000/wrk2-api/home-timeline/read" -d "user_id=1"
-curl "localhost:9000/wrk2-api/home-timeline/read" -d "user_id=88"
+curl "localhost:12345/wrk2-api/home-timeline/read" -d "user_id=1"
+curl "localhost:12345/wrk2-api/home-timeline/read" -d "user_id=88"
 ```
 

@@ -1,6 +1,6 @@
 package metrics
 
-import "github.com/TiagoMalhadas/xcweaver/metrics"
+import "github.com/XCWeaver/xcweaver/metrics"
 
 type RegionLabel struct {
 	Region string

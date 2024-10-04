@@ -3,14 +3,12 @@ import argparse
 import json
 import re
 import statistics
-import threading
 import time
 import googleapiclient.discovery
 from google.oauth2 import service_account
 import sys
 from plumbum import FG
 import requests
-import toml
 import yaml
 from time import sleep
 from tqdm import tqdm
@@ -827,6 +825,7 @@ def local_storage_build():
   from plumbum.cmd import docker
   docker['build', '-t', 'mongodb-delayed:4.4.6', 'docker/mongodb-delayed/.'] & FG
   docker['build', '-t', 'mongodb-setup:4.4.6', 'docker/mongodb-setup/post-storage/.'] & FG
+  docker['build', '-t', 'rabbitmq-setup:3.8', 'docker/rabbitmq-setup/write-home-timeline/.'] & FG
 
 def local_storage_run():
   from plumbum.cmd import docker_compose
@@ -871,12 +870,13 @@ if __name__ == "__main__":
 
   commands = [
     # gcp
-    'configure', 'deploy', 'start', 'stop', 'info', 'restart', 'clean', 'info', 'consistency-window', 'tests',
+    'configure', 'deploy', 'start', 'stop', 'restart', 'clean', 'info', 'consistency-window', 'tests',
     # datastores
     'storage-build', 'storage-deploy', 'storage-run', 'storage-info', 'storage-clean',
     # eval
     'init-social-graph', 'wrk2', 'wrk2-vm', 'wrk2-compose', 'wrk2-update', 'metrics', 'metrics-eu', 'metrics-us',
   ]
+  
   for cmd in commands:
     parser = command_parser.add_parser(cmd)
     parser.add_argument('--local', action='store_true', help="Running in localhost")

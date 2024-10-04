@@ -10,7 +10,7 @@ import (
 
 	"us_deployment/pkg/services"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 func main() {

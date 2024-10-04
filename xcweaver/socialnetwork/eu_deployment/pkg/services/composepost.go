@@ -12,7 +12,7 @@ import (
 	"eu_deployment/pkg/storage"
 	sn_trace "eu_deployment/pkg/trace"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 	"github.com/redis/go-redis/v9"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"

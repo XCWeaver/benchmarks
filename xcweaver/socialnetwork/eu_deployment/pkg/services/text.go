@@ -8,7 +8,7 @@ import (
 
 	"eu_deployment/pkg/model"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 type TextService interface {

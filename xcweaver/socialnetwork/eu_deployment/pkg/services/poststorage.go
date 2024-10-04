@@ -11,7 +11,7 @@ import (
 	"eu_deployment/pkg/model"
 	"eu_deployment/pkg/storage"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 	"github.com/bradfitz/gomemcache/memcache"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

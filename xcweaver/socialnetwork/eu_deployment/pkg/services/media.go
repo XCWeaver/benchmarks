@@ -5,7 +5,7 @@ import (
 	"eu_deployment/pkg/model"
 	"fmt"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 type MediaService interface {

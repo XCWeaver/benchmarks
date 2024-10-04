@@ -748,7 +748,7 @@ if __name__ == "__main__":
 
   commands = [
     # gcp
-    'configure', 'deploy', 'start', 'stop', 'info', 'restart', 'clean', 'info', 'consistency-window', 'tests',
+    'configure', 'deploy', 'start', 'stop', 'restart', 'clean', 'info', 'consistency-window', 'tests',
     # datastores
     'storage-build', 'storage-deploy', 'storage-run', 'storage-info', 'storage-clean',
     # eval

@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 
 	sn_trace "eu_deployment/pkg/trace"
 )

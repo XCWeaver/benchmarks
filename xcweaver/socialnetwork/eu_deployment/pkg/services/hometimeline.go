@@ -5,7 +5,7 @@ import (
 	"eu_deployment/pkg/model"
 	"eu_deployment/pkg/storage"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 
 	"github.com/redis/go-redis/v9"
 )

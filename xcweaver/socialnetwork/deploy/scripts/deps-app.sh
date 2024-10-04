@@ -13,8 +13,8 @@ export PATH=$PATH:/usr/local/go/bin
 echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
 source ~/.bashrc
 
-# install XCWeaver 0.5.47
-go install github.com/TiagoMalhadas/xcweaver/cmd/xcweaver@v0.5.47
+# install XCWeaver 0.22.0
+go install github.com/XCWeaver/xcweaver/cmd/xcweaver@v0.22.0
 export PATH="$PATH:$HOME/go/bin"
 echo 'export PATH="$PATH:$HOME/go/bin"' >> ~/.bashrc
 source ~/.bashrc

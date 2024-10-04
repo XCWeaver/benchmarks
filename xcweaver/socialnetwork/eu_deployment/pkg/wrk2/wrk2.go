@@ -15,7 +15,7 @@ import (
 	"eu_deployment/pkg/model"
 	"eu_deployment/pkg/services"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 type server struct {

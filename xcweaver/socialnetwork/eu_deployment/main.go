@@ -8,7 +8,7 @@ import (
 
 	"eu_deployment/pkg/wrk2"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 func main() {

@@ -5,15 +5,15 @@ package wrk2
 
 import (
 	"context"
-	"github.com/TiagoMalhadas/xcweaver"
-	"github.com/TiagoMalhadas/xcweaver/runtime/codegen"
+	"github.com/XCWeaver/xcweaver"
+	"github.com/XCWeaver/xcweaver/runtime/codegen"
 	"go.opentelemetry.io/otel/trace"
 	"reflect"
 )
 
 func init() {
 	codegen.Register(codegen.Registration{
-		Name:      "github.com/TiagoMalhadas/xcweaver/Main",
+		Name:      "github.com/XCWeaver/xcweaver/Main",
 		Iface:     reflect.TypeOf((*xcweaver.Main)(nil)).Elem(),
 		Impl:      reflect.TypeOf(server{}),
 		Listeners: []string{"wrk2"},
@@ -27,7 +27,7 @@ func init() {
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
 			return main_reflect_stub{caller: caller}
 		},
-		RefData: "⟦96d6b6cf:wEaVeReDgE:github.com/TiagoMalhadas/xcweaver/Main→eu_deployment/pkg/services/HomeTimelineService⟧\n⟦4e647f00:wEaVeReDgE:github.com/TiagoMalhadas/xcweaver/Main→eu_deployment/pkg/services/UserTimelineService⟧\n⟦2a43576a:wEaVeReDgE:github.com/TiagoMalhadas/xcweaver/Main→eu_deployment/pkg/services/TextService⟧\n⟦df114abd:wEaVeReDgE:github.com/TiagoMalhadas/xcweaver/Main→eu_deployment/pkg/services/MediaService⟧\n⟦596a5703:wEaVeReDgE:github.com/TiagoMalhadas/xcweaver/Main→eu_deployment/pkg/services/UniqueIdService⟧\n⟦82ae9317:wEaVeReDgE:github.com/TiagoMalhadas/xcweaver/Main→eu_deployment/pkg/services/UserService⟧\n⟦caacc910:wEaVeReDgE:github.com/TiagoMalhadas/xcweaver/Main→eu_deployment/pkg/services/SocialGraphService⟧\n⟦b3bef549:wEaVeRlIsTeNeRs:github.com/TiagoMalhadas/xcweaver/Main→wrk2⟧\n",
+		RefData: "⟦b2f42a61:wEaVeReDgE:github.com/XCWeaver/xcweaver/Main→eu_deployment/pkg/services/HomeTimelineService⟧\n⟦71d840c0:wEaVeReDgE:github.com/XCWeaver/xcweaver/Main→eu_deployment/pkg/services/UserTimelineService⟧\n⟦58b52f8b:wEaVeReDgE:github.com/XCWeaver/xcweaver/Main→eu_deployment/pkg/services/TextService⟧\n⟦1dce9af2:wEaVeReDgE:github.com/XCWeaver/xcweaver/Main→eu_deployment/pkg/services/MediaService⟧\n⟦2b1c579f:wEaVeReDgE:github.com/XCWeaver/xcweaver/Main→eu_deployment/pkg/services/UniqueIdService⟧\n⟦055c4d6c:wEaVeReDgE:github.com/XCWeaver/xcweaver/Main→eu_deployment/pkg/services/UserService⟧\n⟦f59aca65:wEaVeReDgE:github.com/XCWeaver/xcweaver/Main→eu_deployment/pkg/services/SocialGraphService⟧\n⟦0b620f6f:wEaVeRlIsTeNeRs:github.com/XCWeaver/xcweaver/Main→wrk2⟧\n",
 	})
 }
 
@@ -61,21 +61,21 @@ var _ xcweaver.Main = (*main_client_stub)(nil)
 // you run "go build" or "go run".
 var _ codegen.LatestVersion = codegen.Version[[0][20]struct{}](`
 
-ERROR: You generated this file with 'xcweaver generate' v0.5.45 (codegen
+ERROR: You generated this file with 'xcweaver generate' v0.22.0 (codegen
 version v0.20.0). The generated code is incompatible with the version of the
-github.com/TiagoMalhadas/xcweaver module that you're using. The xcweaver module
+github.com/XCWeaver/xcweaver module that you're using. The xcweaver module
 version can be found in your go.mod file or by running the following command.
 
-    go list -m github.com/TiagoMalhadas/xcweaver
+    go list -m github.com/XCWeaver/xcweaver
 
 We recommend updating the xcweaver module and the 'xcweaver generate' command by
 running the following.
 
-    go get github.com/TiagoMalhadas/xcweaver@latest
-    go install github.com/TiagoMalhadas/xcweaver/cmd/weaver@latest
+    go get github.com/XCWeaver/xcweaver@latest
+    go install github.com/XCWeaver/xcweaver/cmd/weaver@latest
 
 Then, re-run 'xcweaver generate' and re-build your code. If the problem persists,
-please file an issue at https://github.com/TiagoMalhadas/xcweaver/issues.
+please file an issue at https://github.com/XCWeaver/xcweaver/issues.
 
 `)
 

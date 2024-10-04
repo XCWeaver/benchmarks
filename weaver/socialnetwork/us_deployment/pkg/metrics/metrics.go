@@ -11,13 +11,13 @@ var (
 	ReadPostDurationMs = metrics.NewHistogramMap[RegionLabel](
 		"sn_read_post_duration_ms",
 		"Duration of a read operation in milliseconds in the current region",
-		[]float64{},
+		metrics.NonNegativeBuckets,
 	)
 	// write home timeline service
 	QueueDurationMs = metrics.NewHistogramMap[RegionLabel](
 		"sn_queue_duration_ms",
 		"Duration of queue in milliseconds in the current region",
-		[]float64{},
+		metrics.NonNegativeBuckets,
 	)
 	ReceivedNotifications = metrics.NewCounterMap[RegionLabel](
 		"sn_received_notifications",
@@ -34,6 +34,6 @@ var (
 	ConsistencyWindow = metrics.NewHistogramMap[RegionLabel](
 		"sn_consistency_window_ms",
 		"Time taken between the post write on master and the post read on the replica",
-		[]float64{},
+		metrics.NonNegativeBuckets,
 	)
 )

@@ -13,7 +13,7 @@ import (
 	"us_deployment/pkg/storage"
 	"us_deployment/pkg/utils"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"

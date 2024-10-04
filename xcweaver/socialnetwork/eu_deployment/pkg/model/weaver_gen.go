@@ -6,8 +6,8 @@ package model
 import (
 	"eu_deployment/pkg/trace"
 	"fmt"
-	"github.com/TiagoMalhadas/xcweaver"
-	"github.com/TiagoMalhadas/xcweaver/runtime/codegen"
+	"github.com/XCWeaver/xcweaver"
+	"github.com/XCWeaver/xcweaver/runtime/codegen"
 )
 
 // xcweaver.InstanceOf checks.
@@ -23,21 +23,21 @@ import (
 // you run "go build" or "go run".
 var _ codegen.LatestVersion = codegen.Version[[0][20]struct{}](`
 
-ERROR: You generated this file with 'xcweaver generate' v0.5.45 (codegen
+ERROR: You generated this file with 'xcweaver generate' v0.22.0 (codegen
 version v0.20.0). The generated code is incompatible with the version of the
-github.com/TiagoMalhadas/xcweaver module that you're using. The xcweaver module
+github.com/XCWeaver/xcweaver module that you're using. The xcweaver module
 version can be found in your go.mod file or by running the following command.
 
-    go list -m github.com/TiagoMalhadas/xcweaver
+    go list -m github.com/XCWeaver/xcweaver
 
 We recommend updating the xcweaver module and the 'xcweaver generate' command by
 running the following.
 
-    go get github.com/TiagoMalhadas/xcweaver@latest
-    go install github.com/TiagoMalhadas/xcweaver/cmd/weaver@latest
+    go get github.com/XCWeaver/xcweaver@latest
+    go install github.com/XCWeaver/xcweaver/cmd/weaver@latest
 
 Then, re-run 'xcweaver generate' and re-build your code. If the problem persists,
-please file an issue at https://github.com/TiagoMalhadas/xcweaver/issues.
+please file an issue at https://github.com/XCWeaver/xcweaver/issues.
 
 `)
 

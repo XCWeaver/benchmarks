@@ -9,7 +9,7 @@ import (
 	"eu_deployment/pkg/model"
 	"eu_deployment/pkg/utils"
 
-	"github.com/TiagoMalhadas/xcweaver"
+	"github.com/XCWeaver/xcweaver"
 )
 
 type UniqueIdService interface {

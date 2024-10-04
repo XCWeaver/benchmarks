@@ -21,8 +21,8 @@ func main() {
 type app struct {
 	weaver.Implements[weaver.Main]
 	writeHomeTimelineService weaver.Ref[services.WriteHomeTimelineService]
-	//_                        weaver.Ref[services.UpdateHomeTimelineService]
-	socialnetwork weaver.Listener
+	_                        weaver.Ref[services.UpdateHomeTimelineService]
+	socialnetwork            weaver.Listener
 }
 
 // serve is called by weaver.Run and contains the body of the application.

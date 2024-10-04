@@ -75,22 +75,15 @@ region              = "europe-west3"
 
 [single]
 listeners.wrk2 = {address = "127.0.0.1:12345"}
-antipodeAgents.rabbitClientWriteHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
 antipodeAgents.rabbitClientCompose = {datastoreType = "RabbitMQ", host = "localhost", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ"}
-antipodeAgents.rabbitClientUpdateHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+antipodeAgents.rabbitClientUpdate = {datastoreType = "RabbitMQ", host = "localhost", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ"}
 antipodeAgents.mongoClientPostStorage = {datastoreType = "MongoDB", host = "localhost", port = "27017", datastore = "post-storage"}
-antipodeAgents.mongoClientWriteHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
-antipodeAgents.mongoClientUpdateHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
 
 [multi]
 listeners.wrk2 = {address = "127.0.0.1:12345"}
-antipodeAgents.rabbitClientWriteHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
 antipodeAgents.rabbitClientCompose = {datastoreType = "RabbitMQ", host = "localhost", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ"}
 antipodeAgents.rabbitClientUpdate = {datastoreType = "RabbitMQ", host = "localhost", port = "5672", user = "admin", password = "admin", datastore = "rabbitMQ"}
-antipodeAgents.rabbitClientUpdateHomeTL = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
 antipodeAgents.mongoClientPostStorage = {datastoreType = "MongoDB", host = "localhost", port = "27017", datastore = "post-storage"}
-antipodeAgents.mongoClientWriteHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
-antipodeAgents.mongoClientUpdateHomeTL = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-storage"}
 
 
 [serviceweaver]

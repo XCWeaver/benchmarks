@@ -20,10 +20,10 @@ func init() {
 		Iface: reflect.TypeOf((*SocialGraphService)(nil)).Elem(),
 		Impl:  reflect.TypeOf(socialGraphService{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return socialGraphService_local_stub{impl: impl.(SocialGraphService), tracer: tracer, followMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Follow", Remote: false, Generated: true}), followWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "FollowWithUsername", Remote: false, Generated: true}), getFolloweesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowees", Remote: false, Generated: true}), getFollowersMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowers", Remote: false, Generated: true}), insertUserMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "InsertUser", Remote: false, Generated: true}), unfollowMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Unfollow", Remote: false, Generated: true}), unfollowWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "UnfollowWithUsername", Remote: false, Generated: true})}
+			return socialGraphService_local_stub{impl: impl.(SocialGraphService), tracer: tracer, followMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Follow", Remote: false}), followWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "FollowWithUsername", Remote: false}), getFolloweesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowees", Remote: false}), getFollowersMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowers", Remote: false}), insertUserMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "InsertUser", Remote: false}), unfollowMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Unfollow", Remote: false}), unfollowWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "UnfollowWithUsername", Remote: false})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return socialGraphService_client_stub{stub: stub, followMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Follow", Remote: true, Generated: true}), followWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "FollowWithUsername", Remote: true, Generated: true}), getFolloweesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowees", Remote: true, Generated: true}), getFollowersMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowers", Remote: true, Generated: true}), insertUserMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "InsertUser", Remote: true, Generated: true}), unfollowMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Unfollow", Remote: true, Generated: true}), unfollowWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "UnfollowWithUsername", Remote: true, Generated: true})}
+			return socialGraphService_client_stub{stub: stub, followMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Follow", Remote: true}), followWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "FollowWithUsername", Remote: true}), getFolloweesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowees", Remote: true}), getFollowersMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "GetFollowers", Remote: true}), insertUserMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "InsertUser", Remote: true}), unfollowMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "Unfollow", Remote: true}), unfollowWithUsernameMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/SocialGraphService", Method: "UnfollowWithUsername", Remote: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return socialGraphService_server_stub{impl: impl.(SocialGraphService), addLoad: addLoad}
@@ -38,10 +38,10 @@ func init() {
 		Iface: reflect.TypeOf((*UpdateHomeTimelineService)(nil)).Elem(),
 		Impl:  reflect.TypeOf(updateHomeTimelineService{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return updateHomeTimelineService_local_stub{impl: impl.(UpdateHomeTimelineService), tracer: tracer, updateHomeTimelineMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UpdateHomeTimelineService", Method: "UpdateHomeTimeline", Remote: false, Generated: true})}
+			return updateHomeTimelineService_local_stub{impl: impl.(UpdateHomeTimelineService), tracer: tracer, updateHomeTimelineMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UpdateHomeTimelineService", Method: "UpdateHomeTimeline", Remote: false})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return updateHomeTimelineService_client_stub{stub: stub, updateHomeTimelineMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UpdateHomeTimelineService", Method: "UpdateHomeTimeline", Remote: true, Generated: true})}
+			return updateHomeTimelineService_client_stub{stub: stub, updateHomeTimelineMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UpdateHomeTimelineService", Method: "UpdateHomeTimeline", Remote: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return updateHomeTimelineService_server_stub{impl: impl.(UpdateHomeTimelineService), addLoad: addLoad}
@@ -56,10 +56,10 @@ func init() {
 		Iface: reflect.TypeOf((*UserService)(nil)).Elem(),
 		Impl:  reflect.TypeOf(userService{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return userService_local_stub{impl: impl.(UserService), tracer: tracer, getUserIdMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "GetUserId", Remote: false, Generated: true}), loginMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "Login", Remote: false, Generated: true})}
+			return userService_local_stub{impl: impl.(UserService), tracer: tracer, getUserIdMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "GetUserId", Remote: false}), loginMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "Login", Remote: false}), registerUserMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "RegisterUser", Remote: false}), registerUserWithIdMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "RegisterUserWithId", Remote: false})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return userService_client_stub{stub: stub, getUserIdMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "GetUserId", Remote: true, Generated: true}), loginMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "Login", Remote: true, Generated: true})}
+			return userService_client_stub{stub: stub, getUserIdMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "GetUserId", Remote: true}), loginMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "Login", Remote: true}), registerUserMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "RegisterUser", Remote: true}), registerUserWithIdMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/UserService", Method: "RegisterUserWithId", Remote: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return userService_server_stub{impl: impl.(UserService), addLoad: addLoad}
@@ -67,17 +67,17 @@ func init() {
 		ReflectStubFn: func(caller func(string, context.Context, []any, []any) error) any {
 			return userService_reflect_stub{caller: caller}
 		},
-		RefData: "",
+		RefData: "⟦24a13b53:wEaVeReDgE:us_deployment/pkg/services/UserService→us_deployment/pkg/services/SocialGraphService⟧\n",
 	})
 	codegen.Register(codegen.Registration{
 		Name:  "us_deployment/pkg/services/WriteHomeTimelineService",
 		Iface: reflect.TypeOf((*WriteHomeTimelineService)(nil)).Elem(),
 		Impl:  reflect.TypeOf(writeHomeTimelineService{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return writeHomeTimelineService_local_stub{impl: impl.(WriteHomeTimelineService), tracer: tracer, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "GetConsistencyWindowValues", Remote: false, Generated: true}), readNotificationsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "ReadNotifications", Remote: false, Generated: true})}
+			return writeHomeTimelineService_local_stub{impl: impl.(WriteHomeTimelineService), tracer: tracer, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "GetConsistencyWindowValues", Remote: false}), readNotificationsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "ReadNotifications", Remote: false})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return writeHomeTimelineService_client_stub{stub: stub, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "GetConsistencyWindowValues", Remote: true, Generated: true}), readNotificationsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "ReadNotifications", Remote: true, Generated: true})}
+			return writeHomeTimelineService_client_stub{stub: stub, getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "GetConsistencyWindowValues", Remote: true}), readNotificationsMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "us_deployment/pkg/services/WriteHomeTimelineService", Method: "ReadNotifications", Remote: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return writeHomeTimelineService_server_stub{impl: impl.(WriteHomeTimelineService), addLoad: addLoad}
@@ -288,10 +288,12 @@ func (s updateHomeTimelineService_local_stub) UpdateHomeTimeline(ctx context.Con
 }
 
 type userService_local_stub struct {
-	impl             UserService
-	tracer           trace.Tracer
-	getUserIdMetrics *codegen.MethodMetrics
-	loginMetrics     *codegen.MethodMetrics
+	impl                      UserService
+	tracer                    trace.Tracer
+	getUserIdMetrics          *codegen.MethodMetrics
+	loginMetrics              *codegen.MethodMetrics
+	registerUserMetrics       *codegen.MethodMetrics
+	registerUserWithIdMetrics *codegen.MethodMetrics
 }
 
 // Check that userService_local_stub implements the UserService interface.
@@ -335,6 +337,46 @@ func (s userService_local_stub) Login(ctx context.Context, a0 int64, a1 string, 
 	}
 
 	return s.impl.Login(ctx, a0, a1, a2)
+}
+
+func (s userService_local_stub) RegisterUser(ctx context.Context, a0 int64, a1 string, a2 string, a3 string, a4 string) (err error) {
+	// Update metrics.
+	begin := s.registerUserMetrics.Begin()
+	defer func() { s.registerUserMetrics.End(begin, err != nil, 0, 0) }()
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "services.UserService.RegisterUser", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.RegisterUser(ctx, a0, a1, a2, a3, a4)
+}
+
+func (s userService_local_stub) RegisterUserWithId(ctx context.Context, a0 int64, a1 string, a2 string, a3 string, a4 string, a5 string) (err error) {
+	// Update metrics.
+	begin := s.registerUserWithIdMetrics.Begin()
+	defer func() { s.registerUserWithIdMetrics.End(begin, err != nil, 0, 0) }()
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "services.UserService.RegisterUserWithId", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.RegisterUserWithId(ctx, a0, a1, a2, a3, a4, a5)
 }
 
 type writeHomeTimelineService_local_stub struct {
@@ -871,9 +913,11 @@ func (s updateHomeTimelineService_client_stub) UpdateHomeTimeline(ctx context.Co
 }
 
 type userService_client_stub struct {
-	stub             codegen.Stub
-	getUserIdMetrics *codegen.MethodMetrics
-	loginMetrics     *codegen.MethodMetrics
+	stub                      codegen.Stub
+	getUserIdMetrics          *codegen.MethodMetrics
+	loginMetrics              *codegen.MethodMetrics
+	registerUserMetrics       *codegen.MethodMetrics
+	registerUserWithIdMetrics *codegen.MethodMetrics
 }
 
 // Check that userService_client_stub implements the UserService interface.
@@ -997,6 +1041,134 @@ func (s userService_client_stub) Login(ctx context.Context, a0 int64, a1 string,
 	return
 }
 
+func (s userService_client_stub) RegisterUser(ctx context.Context, a0 int64, a1 string, a2 string, a3 string, a4 string) (err error) {
+	// Update metrics.
+	var requestBytes, replyBytes int
+	begin := s.registerUserMetrics.Begin()
+	defer func() { s.registerUserMetrics.End(begin, err != nil, requestBytes, replyBytes) }()
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "services.UserService.RegisterUser", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+			if err != nil {
+				err = errors.Join(weaver.RemoteCallError, err)
+			}
+		}
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+
+	}()
+
+	// Preallocate a buffer of the right size.
+	size := 0
+	size += 8
+	size += (4 + len(a1))
+	size += (4 + len(a2))
+	size += (4 + len(a3))
+	size += (4 + len(a4))
+	enc := codegen.NewEncoder()
+	enc.Reset(size)
+
+	// Encode arguments.
+	enc.Int64(a0)
+	enc.String(a1)
+	enc.String(a2)
+	enc.String(a3)
+	enc.String(a4)
+	var shardKey uint64
+
+	// Call the remote method.
+	requestBytes = len(enc.Data())
+	var results []byte
+	results, err = s.stub.Run(ctx, 2, enc.Data(), shardKey)
+	replyBytes = len(results)
+	if err != nil {
+		err = errors.Join(weaver.RemoteCallError, err)
+		return
+	}
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	err = dec.Error()
+	return
+}
+
+func (s userService_client_stub) RegisterUserWithId(ctx context.Context, a0 int64, a1 string, a2 string, a3 string, a4 string, a5 string) (err error) {
+	// Update metrics.
+	var requestBytes, replyBytes int
+	begin := s.registerUserWithIdMetrics.Begin()
+	defer func() { s.registerUserWithIdMetrics.End(begin, err != nil, requestBytes, replyBytes) }()
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "services.UserService.RegisterUserWithId", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+			if err != nil {
+				err = errors.Join(weaver.RemoteCallError, err)
+			}
+		}
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+
+	}()
+
+	// Preallocate a buffer of the right size.
+	size := 0
+	size += 8
+	size += (4 + len(a1))
+	size += (4 + len(a2))
+	size += (4 + len(a3))
+	size += (4 + len(a4))
+	size += (4 + len(a5))
+	enc := codegen.NewEncoder()
+	enc.Reset(size)
+
+	// Encode arguments.
+	enc.Int64(a0)
+	enc.String(a1)
+	enc.String(a2)
+	enc.String(a3)
+	enc.String(a4)
+	enc.String(a5)
+	var shardKey uint64
+
+	// Call the remote method.
+	requestBytes = len(enc.Data())
+	var results []byte
+	results, err = s.stub.Run(ctx, 3, enc.Data(), shardKey)
+	replyBytes = len(results)
+	if err != nil {
+		err = errors.Join(weaver.RemoteCallError, err)
+		return
+	}
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
+	err = dec.Error()
+	return
+}
+
 type writeHomeTimelineService_client_stub struct {
 	stub                              codegen.Stub
 	getConsistencyWindowValuesMetrics *codegen.MethodMetrics
@@ -1102,10 +1274,10 @@ func (s writeHomeTimelineService_client_stub) ReadNotifications(ctx context.Cont
 // Note that "weaver generate" will always generate the error message below.
 // Everything is okay. The error message is only relevant if you see it when
 // you run "go build" or "go run".
-var _ codegen.LatestVersion = codegen.Version[[0][24]struct{}](`
+var _ codegen.LatestVersion = codegen.Version[[0][20]struct{}](`
 
-ERROR: You generated this file with 'weaver generate' v0.24.3 (codegen
-version v0.24.0). The generated code is incompatible with the version of the
+ERROR: You generated this file with 'weaver generate' v0.22.1-0.20231019162801-c2294d1ae0e8 (codegen
+version v0.20.0). The generated code is incompatible with the version of the
 github.com/ServiceWeaver/weaver module that you're using. The weaver module
 version can be found in your go.mod file or by running the following command.
 
@@ -1403,6 +1575,10 @@ func (s userService_server_stub) GetStubFn(method string) func(ctx context.Conte
 		return s.getUserId
 	case "Login":
 		return s.login
+	case "RegisterUser":
+		return s.registerUser
+	case "RegisterUserWithId":
+		return s.registerUserWithId
 	default:
 		return nil
 	}
@@ -1460,6 +1636,72 @@ func (s userService_server_stub) login(ctx context.Context, args []byte) (res []
 	// Encode the results.
 	enc := codegen.NewEncoder()
 	enc.String(r0)
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
+func (s userService_server_stub) registerUser(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// Decode arguments.
+	dec := codegen.NewDecoder(args)
+	var a0 int64
+	a0 = dec.Int64()
+	var a1 string
+	a1 = dec.String()
+	var a2 string
+	a2 = dec.String()
+	var a3 string
+	a3 = dec.String()
+	var a4 string
+	a4 = dec.String()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	appErr := s.impl.RegisterUser(ctx, a0, a1, a2, a3, a4)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
+func (s userService_server_stub) registerUserWithId(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// Decode arguments.
+	dec := codegen.NewDecoder(args)
+	var a0 int64
+	a0 = dec.Int64()
+	var a1 string
+	a1 = dec.String()
+	var a2 string
+	a2 = dec.String()
+	var a3 string
+	a3 = dec.String()
+	var a4 string
+	a4 = dec.String()
+	var a5 string
+	a5 = dec.String()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	appErr := s.impl.RegisterUserWithId(ctx, a0, a1, a2, a3, a4, a5)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
 	enc.Error(appErr)
 	return enc.Data(), nil
 }
@@ -1593,6 +1835,16 @@ func (s userService_reflect_stub) GetUserId(ctx context.Context, a0 int64, a1 st
 
 func (s userService_reflect_stub) Login(ctx context.Context, a0 int64, a1 string, a2 string) (r0 string, err error) {
 	err = s.caller("Login", ctx, []any{a0, a1, a2}, []any{&r0})
+	return
+}
+
+func (s userService_reflect_stub) RegisterUser(ctx context.Context, a0 int64, a1 string, a2 string, a3 string, a4 string) (err error) {
+	err = s.caller("RegisterUser", ctx, []any{a0, a1, a2, a3, a4}, []any{})
+	return
+}
+
+func (s userService_reflect_stub) RegisterUserWithId(ctx context.Context, a0 int64, a1 string, a2 string, a3 string, a4 string, a5 string) (err error) {
+	err = s.caller("RegisterUserWithId", ctx, []any{a0, a1, a2, a3, a4, a5}, []any{})
 	return
 }
 
