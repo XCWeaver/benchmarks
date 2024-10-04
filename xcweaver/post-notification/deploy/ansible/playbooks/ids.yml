@@ -1,0 +1,12 @@
+---
+- hosts:
+    app_wrk2
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+
+    - name: Upload posIds.txt to host machine
+      synchronize:
+        src: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/posIds.txt"
+        dest: "{{ base_dir }}/posIds.txt"
+        mode: pull

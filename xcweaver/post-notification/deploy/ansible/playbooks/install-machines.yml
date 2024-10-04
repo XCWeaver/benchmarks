@@ -1,7 +1,6 @@
 ---
 - hosts: 
     app_wrk2
-    app_services
     swarm_manager
     swarm_workers
   gather_facts: no
@@ -40,8 +39,6 @@
       with_items:
         - "{{ base_dir }}/docker-compose.yml"
         - "{{ base_dir }}/clustering"
-        - "{{ base_dir }}/deploy/tmp/envoy.yaml"
-
     - name: Build docker images in datastore nodes
       docker_image:
         name: "{{ item.name }}"
@@ -76,7 +73,6 @@
 # -----------
 - hosts: 
     app_wrk2
-    app_services
   gather_facts: no
   any_errors_fatal: true
   tasks:
@@ -105,42 +101,3 @@
       shell: pip3 install -r requirements.txt
       args:
         chdir: "{{ app_folder_name }}"
-
-- hosts: 
-    app_services
-  gather_facts: no
-  any_errors_fatal: true
-  tasks:
-    - name: Upload application for deploying post-notification @ xcweaver in app service nodes
-      synchronize:
-        src: "{{ item }}"
-        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/
-        use_ssh_args: yes
-      with_items:
-        - "{{ base_dir }}/mongo-rabbitmq"
-        - "{{ base_dir }}/mysql-rabbitmq"
-        - "{{ base_dir }}/redis-rabbitmq"
-
-    - name: Upload weaver config files for deploying post-notification redis-rabbitmq @ xcweaver in app service nodes
-      synchronize:
-        src: "{{ item }}"
-        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/redis-rabbitmq/{{ hostvars[inventory_hostname]['region'] }}_deployment
-        use_ssh_args: yes
-      with_items:
-        - "{{ base_dir }}/deploy/tmp/redis-rabbitmq/weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"
-
-    - name: Upload weaver config files for deploying post-notification mongo-rabbitmq @ xcweaver in app service nodes
-      synchronize:
-        src: "{{ item }}"
-        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/mongo-rabbitmq/{{ hostvars[inventory_hostname]['region'] }}_deployment
-        use_ssh_args: yes
-      with_items:
-        - "{{ base_dir }}/deploy/tmp/mongo-rabbitmq/weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"
-
-    - name: Upload weaver config files for deploying post-notification mysql-rabbitmq @ xcweaver in app service nodes
-      synchronize:
-        src: "{{ item }}"
-        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/mysql-rabbitmq/{{ hostvars[inventory_hostname]['region'] }}_deployment
-        use_ssh_args: yes
-      with_items:
-        - "{{ base_dir }}/deploy/tmp/mysql-rabbitmq/weaver-gcp-{{ hostvars[inventory_hostname]['region'] }}.toml"

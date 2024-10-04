@@ -1,0 +1,16 @@
+[serviceweaver]
+binary = "./us-deployment"
+
+[single]
+listeners.postnot = {address = "0.0.0.0:12346"}
+antipodeAgents.client = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-notification"}
+antipodeAgents.clientRabbitMQ = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+
+[multi]
+listeners.postnot = {address = "0.0.0.0:12346"}
+antipodeAgents.client = {datastoreType = "MongoDB", host = "localhost", port = "27018", datastore = "post-notification"}
+antipodeAgents.clientRabbitMQ = {datastoreType = "RabbitMQ", host = "localhost", port = "5673", user = "admin", password = "admin", datastore = "rabbitMQ"}
+
+[gke]
+regions = ["us-west4"]
+listeners.postnot = {public_hostname = "hello.com"}

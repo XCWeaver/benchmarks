@@ -1,0 +1,33 @@
+appConfig: weaver_mongo.toml
+repo: docker.io/tiagomalhadas
+
+ScalingSpec:
+  minReplicas: 1
+  maxReplicas: 1
+
+listeners:
+  - name: postnot
+    public: true
+    port: 12345
+
+antipodeAgents:
+  - name: client
+    datastoreType: MongoDB
+    host: 34.121.3.58
+    port: 27018
+    datastore: post-notification
+  - name: clientRabbitMQ
+    datastoreType: RabbitMQ
+    host: 34.121.3.58
+    port: 5673
+    user: admin
+    password: admin
+    datastore: rabbitMQ
+
+resourceSpec:
+  requests:
+    memory: "8Gi"
+    cpu: "2"  
+  limits:
+    memory: "8Gi"
+    cpu: "2"

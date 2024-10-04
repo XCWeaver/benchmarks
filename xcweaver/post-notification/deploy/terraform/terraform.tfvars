@@ -8,6 +8,6 @@
 
 # e.g.
 gcp_credentials_path = "../../gcp/credentials.json"
-gcp_project          = "benchmarks-426013"
-gcp_region           = "europe-west3"
-gcp_zone             = "europe-west3-a"
+gcp_project          = "benchmarks2"
+gcp_region           = "europe-west6"
+gcp_zone             = "europe-west6-a"

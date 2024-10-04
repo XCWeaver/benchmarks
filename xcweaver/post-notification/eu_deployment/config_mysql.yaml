@@ -1,0 +1,35 @@
+appConfig: weaver_mysql.toml
+repo: docker.io/tiagomalhadas
+
+ScalingSpec:
+  minReplicas: 1
+  maxReplicas: 1
+
+listeners:
+  - name: postnot
+    public: true
+    port: 12345
+
+antipodeAgents:
+  - name: client
+    datastoreType: MySQL
+    host: 34.65.60.146
+    port: 3307
+    user: root
+    password: root_password
+    datastore: post_notification
+  - name: clientRabbitMQ
+    datastoreType: RabbitMQ
+    host: 34.65.60.146
+    port: 5672
+    user: admin
+    password: admin
+    datastore: rabbitMQ
+
+resourceSpec:
+  requests:
+    memory: "4Gi"
+    cpu: "1"  
+  limits:
+    memory: "4Gi"
+    cpu: "1" 
