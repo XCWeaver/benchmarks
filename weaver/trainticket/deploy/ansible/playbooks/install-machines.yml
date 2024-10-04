@@ -1,8 +1,6 @@
 ---
 - hosts: 
-    #trainticket-db
     trainticket-wrk2
-    trainticket-app
   gather_facts: no
   any_errors_fatal: true
   tasks:
@@ -11,38 +9,10 @@
         path: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}"
         state: directory
 
-# ----------
-# DATASTORES
-# ----------
-#- hosts: 
-#    trainticket-db
-#  gather_facts: no
-#  any_errors_fatal: true
-#  tasks:
-#    - name: Create dependencies script in datastore node
-#      copy:
-#        src: "{{ base_dir }}/deploy/scripts/deps-datastore.sh"
-#        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/"
-#        mode: u=rwx,g=rx,o=rx # 755 permissions
-
-#    - name: Install dependencies in datastore node
-#      shell: ./deps-datastore.sh
-#      args:
-#        executable: /bin/bash
-  
-#    - name: Upload docker-compose.yml file to datastore node
-#      synchronize:
-#        src: "{{ item }}"
-#        dest: "/home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/"
-#        use_ssh_args: yes
-#      with_items:
-#        - "{{ base_dir }}/docker-compose.yml"
-
 # -----------
 # APPLICATION
 # -----------
 - hosts: 
-    trainticket-app
     trainticket-wrk2
   gather_facts: no
   any_errors_fatal: true
@@ -67,26 +37,8 @@
         - "{{ base_dir }}/manager.py"
         - "{{ base_dir }}/requirements.txt"
         - "{{ base_dir }}/gcp"
-        - "{{ base_dir }}/ids.json"
 
     - name: Install python requirements
       shell: pip3 install -r requirements.txt
       args:
         chdir: "{{ app_folder_name }}"
-
-- hosts: 
-    trainticket-app
-  gather_facts: no
-  any_errors_fatal: true
-  tasks:
-    - name: Upload application for deploying trainticket @ weaver in app service node
-      synchronize:
-        src: "{{ item }}"
-        dest: /home/{{ hostvars[inventory_hostname]['user'] }}/{{ app_folder_name }}/
-        use_ssh_args: yes
-      with_items:
-        - "{{ base_dir }}/pkg"
-        - "{{ base_dir }}/main.go"
-        - "{{ base_dir }}/go.mod"
-        - "{{ base_dir }}/go.sum"
-        - "{{ base_dir }}/deploy/tmp/weaver-gcp.toml"

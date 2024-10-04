@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"sync"
 
 	"trainticket/pkg/model"
 
@@ -38,6 +39,7 @@ type orderService struct {
 	//client *mongo.Client
 	//stationService weaver.Ref[StationService]
 	orders []model.Order
+	mu     sync.Mutex
 	roles  []string
 }
 
@@ -386,6 +388,8 @@ func (osi *orderService) GetOrderById(ctx context.Context, orderId, token string
 	if err != nil {
 		return model.Order{}, err
 	}*/
+	osi.mu.Lock()
+	defer osi.mu.Unlock()
 
 	var order model.Order
 	found := false
@@ -434,6 +438,9 @@ func (osi *orderService) ModifyOrder(ctx context.Context, orderId string, status
 	}
 
 	order.Status = status*/
+
+	osi.mu.Lock()
+	defer osi.mu.Unlock()
 
 	var order model.Order
 	found := false

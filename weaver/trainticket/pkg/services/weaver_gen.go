@@ -20,10 +20,10 @@ func init() {
 		Iface: reflect.TypeOf((*CancelService)(nil)).Elem(),
 		Impl:  reflect.TypeOf(cancelService{}),
 		LocalStubFn: func(impl any, caller string, tracer trace.Tracer) any {
-			return cancelService_local_stub{impl: impl.(CancelService), tracer: tracer, calculateMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "Calculate", Remote: false, Generated: true}), cancelTicketMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "CancelTicket", Remote: false, Generated: true}), getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetConsistencyWindowValues", Remote: false, Generated: true}), getInconsistenciesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetInconsistencies", Remote: false, Generated: true})}
+			return cancelService_local_stub{impl: impl.(CancelService), tracer: tracer, calculateMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "Calculate", Remote: false, Generated: true}), cancelTicketMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "CancelTicket", Remote: false, Generated: true}), getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetConsistencyWindowValues", Remote: false, Generated: true}), getInconsistenciesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetInconsistencies", Remote: false, Generated: true}), resetMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "Reset", Remote: false, Generated: true})}
 		},
 		ClientStubFn: func(stub codegen.Stub, caller string) any {
-			return cancelService_client_stub{stub: stub, calculateMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "Calculate", Remote: true, Generated: true}), cancelTicketMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "CancelTicket", Remote: true, Generated: true}), getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetConsistencyWindowValues", Remote: true, Generated: true}), getInconsistenciesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetInconsistencies", Remote: true, Generated: true})}
+			return cancelService_client_stub{stub: stub, calculateMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "Calculate", Remote: true, Generated: true}), cancelTicketMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "CancelTicket", Remote: true, Generated: true}), getConsistencyWindowValuesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetConsistencyWindowValues", Remote: true, Generated: true}), getInconsistenciesMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "GetInconsistencies", Remote: true, Generated: true}), resetMetrics: codegen.MethodMetricsFor(codegen.MethodLabels{Caller: caller, Component: "trainticket/pkg/services/CancelService", Method: "Reset", Remote: true, Generated: true})}
 		},
 		ServerStubFn: func(impl any, addLoad func(uint64, float64)) codegen.Server {
 			return cancelService_server_stub{impl: impl.(CancelService), addLoad: addLoad}
@@ -110,6 +110,7 @@ type cancelService_local_stub struct {
 	cancelTicketMetrics               *codegen.MethodMetrics
 	getConsistencyWindowValuesMetrics *codegen.MethodMetrics
 	getInconsistenciesMetrics         *codegen.MethodMetrics
+	resetMetrics                      *codegen.MethodMetrics
 }
 
 // Check that cancelService_local_stub implements the CancelService interface.
@@ -193,6 +194,26 @@ func (s cancelService_local_stub) GetInconsistencies(ctx context.Context) (r0 in
 	}
 
 	return s.impl.GetInconsistencies(ctx)
+}
+
+func (s cancelService_local_stub) Reset(ctx context.Context) (err error) {
+	// Update metrics.
+	begin := s.resetMetrics.Begin()
+	defer func() { s.resetMetrics.End(begin, err != nil, 0, 0) }()
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.tracer.Start(ctx, "services.CancelService.Reset", trace.WithSpanKind(trace.SpanKindInternal))
+		defer func() {
+			if err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			}
+			span.End()
+		}()
+	}
+
+	return s.impl.Reset(ctx)
 }
 
 type insidePaymentService_local_stub struct {
@@ -332,6 +353,7 @@ type cancelService_client_stub struct {
 	cancelTicketMetrics               *codegen.MethodMetrics
 	getConsistencyWindowValuesMetrics *codegen.MethodMetrics
 	getInconsistenciesMetrics         *codegen.MethodMetrics
+	resetMetrics                      *codegen.MethodMetrics
 }
 
 // Check that cancelService_client_stub implements the CancelService interface.
@@ -545,6 +567,52 @@ func (s cancelService_client_stub) GetInconsistencies(ctx context.Context) (r0 i
 	// Decode the results.
 	dec := codegen.NewDecoder(results)
 	r0 = dec.Int()
+	err = dec.Error()
+	return
+}
+
+func (s cancelService_client_stub) Reset(ctx context.Context) (err error) {
+	// Update metrics.
+	var requestBytes, replyBytes int
+	begin := s.resetMetrics.Begin()
+	defer func() { s.resetMetrics.End(begin, err != nil, requestBytes, replyBytes) }()
+
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().IsValid() {
+		// Create a child span for this method.
+		ctx, span = s.stub.Tracer().Start(ctx, "services.CancelService.Reset", trace.WithSpanKind(trace.SpanKindClient))
+	}
+
+	defer func() {
+		// Catch and return any panics detected during encoding/decoding/rpc.
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+			if err != nil {
+				err = errors.Join(weaver.RemoteCallError, err)
+			}
+		}
+
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+
+	}()
+
+	var shardKey uint64
+
+	// Call the remote method.
+	var results []byte
+	results, err = s.stub.Run(ctx, 4, nil, shardKey)
+	replyBytes = len(results)
+	if err != nil {
+		err = errors.Join(weaver.RemoteCallError, err)
+		return
+	}
+
+	// Decode the results.
+	dec := codegen.NewDecoder(results)
 	err = dec.Error()
 	return
 }
@@ -915,6 +983,8 @@ func (s cancelService_server_stub) GetStubFn(method string) func(ctx context.Con
 		return s.getConsistencyWindowValues
 	case "GetInconsistencies":
 		return s.getInconsistencies
+	case "Reset":
+		return s.reset
 	default:
 		return nil
 	}
@@ -1012,6 +1082,25 @@ func (s cancelService_server_stub) getInconsistencies(ctx context.Context, args 
 	// Encode the results.
 	enc := codegen.NewEncoder()
 	enc.Int(r0)
+	enc.Error(appErr)
+	return enc.Data(), nil
+}
+
+func (s cancelService_server_stub) reset(ctx context.Context, args []byte) (res []byte, err error) {
+	// Catch and return any panics detected during encoding/decoding/rpc.
+	defer func() {
+		if err == nil {
+			err = codegen.CatchPanics(recover())
+		}
+	}()
+
+	// TODO(rgrandl): The deferred function above will recover from panics in the
+	// user code: fix this.
+	// Call the local method.
+	appErr := s.impl.Reset(ctx)
+
+	// Encode the results.
+	enc := codegen.NewEncoder()
 	enc.Error(appErr)
 	return enc.Data(), nil
 }
@@ -1241,6 +1330,11 @@ func (s cancelService_reflect_stub) GetConsistencyWindowValues(ctx context.Conte
 
 func (s cancelService_reflect_stub) GetInconsistencies(ctx context.Context) (r0 int, err error) {
 	err = s.caller("GetInconsistencies", ctx, []any{}, []any{&r0})
+	return
+}
+
+func (s cancelService_reflect_stub) Reset(ctx context.Context) (err error) {
+	err = s.caller("Reset", ctx, []any{}, []any{})
 	return
 }
 

@@ -1,8 +1,9 @@
 app_folder_name: trainticket
-base_dir: /home/tmalhadas/XCWeaver/tese/weaver/trainticket
+base_dir: /home/tmalhadas/benchmarks/weaver/trainticket
 deployment_type: gcp
 duration: '300'
-rate: '100'
+host: 34.65.32.74
+rate: '390'
 stack: trainticket
-threads: '10'
-workload_timestamp: 2024-09-05_15:11:16
+threads: '39'
+workload_timestamp: 2024-10-02_19:35:14

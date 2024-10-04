@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"sync"
 
 	"github.com/google/uuid"
 
@@ -34,6 +35,7 @@ type insidePaymentService struct {
 	orderOtherService weaver.Ref[OrderOtherService]
 	//paymentService    weaver.Ref[PaymentService]
 	roles    []string
+	mu       sync.Mutex
 	addMoney []model.AddMoney
 }
 
@@ -285,6 +287,8 @@ func (ipsi *insidePaymentService) QueryAccount(ctx context.Context, token string
 func (ipsi *insidePaymentService) DrawBack(ctx context.Context, userId, money, token string) (string, error) {
 	logger := ipsi.Logger(ctx)
 	logger.Info("entering DrawBack", "userId", userId)
+	ipsi.mu.Lock()
+	defer ipsi.mu.Unlock()
 
 	/*err := util.Authenticate(token, ipsi.roles...)
 	if err != nil {

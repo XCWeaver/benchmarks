@@ -12,8 +12,8 @@ listeners:
 
 resourceSpec:
   requests:
-    memory: "10Gi"
+    memory: "8Gi"
     cpu: "2"  
   limits:
-    memory: "32Gi"
-    cpu: "8"  
+    memory: "8Gi"
+    cpu: "2" 

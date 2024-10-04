@@ -39,8 +39,8 @@ type server struct {
 	priceService            weaver.Ref[services.PriceService]
 	preserveOtherService    weaver.Ref[services.PreserveOtherService]
 	preserveService         weaver.Ref[services.PreserveService]
-	orderOtherService       weaver.Ref[services.OrderOtherService]
-	orderService            weaver.Ref[services.OrderService]*/
+	orderOtherService       weaver.Ref[services.OrderOtherService]*/
+	//orderService weaver.Ref[services.OrderService]
 	//contactService weaver.Ref[services.ContactService]
 	//trainService            weaver.Ref[services.TrainService]
 	//userService weaver.Ref[services.UserService]
@@ -86,9 +86,11 @@ func Serve(ctx context.Context, s *server) error {
 	mux.Handle("/wrk2-api/user/updateUser", instrument("user/updateUser", s.updateUser, http.MethodGet, http.MethodPost))
 	mux.Handle("/wrk2-api/user/login", instrument("user/login", s.login, http.MethodGet, http.MethodPost))
 	mux.Handle("/wrk2-api/user/calculateRefund", instrument("user/calculateRefund", s.calculateRefund, http.MethodGet, http.MethodPost))*/
+	//mux.Handle("/wrk2-api/user/getOrder", instrument("user/getOrder", s.getOrder, http.MethodGet, http.MethodPost))
 	mux.Handle("/wrk2-api/user/cancelTicket", instrument("user/cancelTicket", s.cancelTicket, http.MethodGet, http.MethodPost))
 	mux.Handle("/wrk2-api/user/consistencyWindow", instrument("user/consistencyWindow", s.consistencyWindow, http.MethodGet, http.MethodPost))
 	mux.Handle("/wrk2-api/user/inconsistencies", instrument("user/inconsistencies", s.inconsistencies, http.MethodGet, http.MethodPost))
+	mux.Handle("/wrk2-api/user/reset", instrument("user/reset", s.reset, http.MethodGet, http.MethodPost))
 	//mux.Handle("/wrk2-api/user/pay", instrument("user/pay", s.pay, http.MethodGet, http.MethodPost))
 	//mux.Handle("/wrk2-api/user/rebook", instrument("user/rebook", s.rebook, http.MethodGet, http.MethodPost))
 
@@ -1245,9 +1247,6 @@ func validateCancelTicketParams(logger *slog.Logger, r *http.Request) (string, s
 	orderId := r.Form.Get("orderId")
 	loginId := r.Form.Get("loginId")
 
-	//TO-DO
-	// validate mandatory fields
-
 	return orderId, loginId, token, nil
 }
 
@@ -1272,6 +1271,43 @@ func (s *server) cancelTicket(w http.ResponseWriter, r *http.Request) {
 	logger.Debug(result)
 	tt_metrics.TicketsCanceled.Inc()
 }
+
+/*func validateGetOrderParams(logger *slog.Logger, r *http.Request) (string, error) {
+	if err := r.ParseForm(); err != nil {
+		return "", err
+	}
+	// get params
+	orderId := r.Form.Get("orderId")
+
+	return orderId, nil
+}
+
+func (s *server) getOrder(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	logger := s.Logger(ctx)
+	logger.Info("entering /wrk2-api/user/getOrder")
+
+	orderId, err := validateGetOrderParams(logger, r)
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+
+	result, err := s.orderService.Get().GetOrderById(ctx, orderId, "token")
+	if err != nil {
+		logger.Error(err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	resultJson, err := json.Marshal(result)
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	w.Write(resultJson)
+}*/
 
 func (s *server) consistencyWindow(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -1302,6 +1338,18 @@ func (s *server) inconsistencies(w http.ResponseWriter, r *http.Request) {
 	resultStr := strconv.Itoa(result)
 
 	w.Write([]byte(resultStr))
+}
+
+func (s *server) reset(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	logger := s.Logger(ctx)
+	logger.Info("entering /wrk2-api/user/reset")
+
+	s.cancelService.Get().Reset(ctx)
+
+	w.Header().Set("Content-Type", "text/plain")
+
+	w.Write([]byte("done!"))
 }
 
 /*func validatePayParams(logger *slog.Logger, r *http.Request) (string, string, string, string, error) {
