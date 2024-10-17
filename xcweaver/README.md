@@ -1,3 +1,7 @@
-# Benchmarks
+# Benchmarks @ XCWeaver
 
-Benchmarks implemented using the [Google's Service Weaver](https://serviceweaver.dev/) framework at [weaver](https://github.com/TiagoMalhadas/tese/tree/main/weaver) and using [XCWeaver](https://github.com/TiagoMalhadas/xcweaver) at [xcweaver](https://github.com/TiagoMalhadas/tese/tree/main/xcweaver)
+Implementation of 3 different benchmarks using [XCWeaver](https://github.com/XCWeaver/xcweaver)
+
+- [Post-Notification](https://github.com/XCWeaver/benchmarks/tree/main/xcweaver/post-notification)
+- [Social Network](https://github.com/XCWeaver/benchmarks/tree/main/xcweaver/socialnetwork)
+- [TrainTicket](https://github.com/XCWeaver/benchmarks/tree/main/xcweaver/trainticket)
